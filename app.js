@@ -1341,7 +1341,7 @@ function renderHotArea(groups) {
   }
 
   // 2. Check other favorites
-  const favorites = ['Brazil', 'France', 'Spain', 'England', 'Germany', 'Netherlands', 'Italy', 'Uruguay', 'Colombia'];
+  const favorites = ['Argentina', 'Brazil', 'France', 'Spain', 'England', 'Germany', 'Netherlands', 'Portugal', 'Italy', 'Uruguay', 'Colombia'];
   const otherClashes = [];
   
   for (let i = 0; i < favorites.length; i++) {

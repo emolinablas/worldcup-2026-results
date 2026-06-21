@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mundial 2026 — Cuadro de Llaves en Tiempo Real</title>
+  <meta name="description" content="Visualizador en tiempo real del cuadro de llaves del Mundial FIFA 2026. Sigue los resultados y proyecta los dieciseisavos de final.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient glow orbs -->
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-hdr">
+    <div class="hdr-brand">
+      <div class="hdr-icon">⚽</div>
+      <div>
+        <h1 class="hdr-title">MUNDIAL <span>2026</span></h1>
+        <p class="hdr-sub">Cuadro de Llaves · Tiempo Real</p>
+      </div>
+    </div>
+    <div class="hdr-meta">
+      <div class="src-pill" id="srcPill">
+        <span class="src-dot" id="srcDot"></span>
+        <span id="srcLabel">Conectando...</span>
+      </div>
+      <span class="upd-lbl" id="updTime">—</span>
+      <button class="icon-btn" id="refreshBtn" title="Actualizar datos" aria-label="Actualizar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== NEXT MATCH COUNTDOWN ===== -->
+  <div class="next-bar" id="nextBar">
+    <div class="next-bar-inner">
+      <span class="next-lbl" id="nextLbl">Próximo partido</span>
+      <strong id="nextTeams">—</strong>
+      <div class="clk">
+        <div class="clk-unit"><b id="clkD">--</b><small>d</small></div>
+        <span class="clk-sep">:</span>
+        <div class="clk-unit"><b id="clkH">--</b><small>h</small></div>
+        <span class="clk-sep">:</span>
+        <div class="clk-unit"><b id="clkM">--</b><small>m</small></div>
+        <span class="clk-sep">:</span>
+        <div class="clk-unit"><b id="clkS">--</b><small>s</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TABS ===== -->
+  <nav class="tabs" role="tablist" aria-label="Vistas del torneo">
+    <button class="tab active" id="tabBracket" data-panel="panelBracket" role="tab" aria-selected="true">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Cuadro de Llaves
+    </button>
+    <button class="tab" id="tabGroups" data-panel="panelGroups" role="tab" aria-selected="false">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Grupos
+    </button>
+    <button class="tab" id="tabThirds" data-panel="panelThirds" role="tab" aria-selected="false">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21H5a2 2 0 01-2-2v-3"/><path d="M21 8V5a2 2 0 00-2-2h-3"/><polyline points="6 9 12 15 18 9"/></svg>
+      Mejores Terceros
+    </button>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main>
+
+    <!-- BRACKET PANEL -->
+    <div class="panel active" id="panelBracket" role="tabpanel" aria-labelledby="tabBracket">
+      <div class="bracket-scroll" id="bracketScroll">
+        <div class="bracket-wrap" id="bracketWrap">
+          <div class="init-msg" id="bracketLoader">
+            <div class="spinner"></div>
+            <p>Cargando datos del torneo...</p>
+          </div>
+        </div>
+        <!-- SVG connector overlay injected by JS -->
+      </div>
+      <div class="legend">
+        <div class="leg-item"><span class="pip pip-confirmed"></span>Clasificado</div>
+        <div class="leg-item"><span class="pip pip-projected"></span>Proyectado</div>
+        <div class="leg-item"><span class="pip pip-tbd"></span>Por definir</div>
+        <div class="leg-item"><span class="pip pip-live pip-blink"></span>En vivo</div>
+        <div class="leg-item"><span class="pip pip-done"></span>Jugado</div>
+      </div>
+    </div>
+
+    <!-- GROUPS PANEL -->
+    <div class="panel" id="panelGroups" role="tabpanel" aria-labelledby="tabGroups">
+      <div class="groups-wrap" id="groupsWrap">
+        <div class="init-msg">
+          <div class="spinner"></div>
+          <p>Cargando grupos...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- THIRDS PANEL -->
+    <div class="panel" id="panelThirds" role="tabpanel" aria-labelledby="tabThirds">
+      <div class="thirds-wrap">
+        <div class="thirds-intro">
+          <h2>Mejores Terceros del Torneo</h2>
+          <p>Los <strong>8 mejores</strong> de los 12 equipos en tercer lugar clasifican a los Dieciseisavos de Final. Los equipos <span class="gold-hl">destacados en dorado</span> clasificarían con los resultados actuales.</p>
+        </div>
+        <div id="thirdsContent">
+          <div class="init-msg">
+            <div class="spinner"></div>
+            <p>Calculando clasificación...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

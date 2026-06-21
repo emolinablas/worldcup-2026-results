@@ -319,6 +319,7 @@ function normalizeOpenfoot(m) {
     score2: played ? s2 : null,
     status: played ? 'finished' : 'scheduled',
     date: m.date || '',
+    time: m.time || '',
     round: m.round || (g ? 'Group Stage' : 'Knockout'),
   };
 }
@@ -1056,11 +1057,28 @@ function startCountdown(matches) {
   const upcoming = matches
     .filter(m => m.status === 'scheduled' && m.date)
     .map(m => {
-      // Try to parse date
-      const d = new Date(m.date + 'T00:00:00');
-      return { ...m, ts: d.getTime() };
+      let ts;
+      if (m.time) {
+        // e.g. "13:00 UTC-6"
+        const parts = m.time.split(' ');
+        const timeStr = parts[0];
+        const tzStr = parts[1];
+        let tz = 'Z';
+        if (tzStr && tzStr.startsWith('UTC')) {
+          const num = parseInt(tzStr.replace('UTC',''), 10);
+          if (!isNaN(num)) {
+            const sign = num >= 0 ? '+' : '-';
+            const val = Math.abs(num);
+            tz = `${sign}${String(val).padStart(2,'0')}:00`;
+          }
+        }
+        ts = new Date(`${m.date}T${timeStr}:00${tz}`).getTime();
+      } else {
+        ts = new Date(`${m.date}T12:00:00Z`).getTime();
+      }
+      return { ...m, ts };
     })
-    .filter(m => m.ts > now)
+    .filter(m => !isNaN(m.ts) && m.ts > now)
     .sort((a,b) => a.ts - b.ts);
 
   const live = matches.filter(m => m.status === 'live');

@@ -617,7 +617,55 @@ header, nav, main, .next-bar { position: relative; z-index: 1; }
 }
 .error-msg button:hover { background: var(--gold-lt); }
 
-/* === 13. UTILITIES ==================================== */
+/* === 13. HOT AREA ===================================== */
+.hot-wrap { padding: 1.5rem; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+.hot-banner {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(245,158,11,0.15) 100%);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hot-banner::before {
+  content: '🔥'; position: absolute; font-size: 10rem; opacity: 0.04; top: -2rem; left: 50%; transform: translateX(-50%);
+}
+.hot-banner h2 {
+  font-family: var(--ff-display); font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5); position: relative; z-index: 2;
+}
+.hot-banner .clash-status {
+  font-size: 1.1rem; color: var(--gold); font-weight: 600; position: relative; z-index: 2;
+}
+.hot-banner .clash-teams {
+  display: flex; justify-content: center; align-items: center; gap: 1.5rem; margin-top: 1.5rem; position: relative; z-index: 2;
+}
+.hot-banner .clash-team {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.1rem;
+}
+.hot-banner .clash-team img { width: 56px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.hot-banner .vs { font-family: var(--ff-display); font-weight: 900; color: var(--red); font-size: 1.8rem; font-style: italic; }
+
+.hot-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;
+}
+.hot-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1rem;
+  display: flex; flex-direction: column; gap: 0.8rem;
+  transition: transform 0.2s, background 0.2s;
+}
+.hot-card:hover { transform: translateY(-2px); background: var(--card-h); }
+.hot-card-hdr {
+  font-family: var(--ff-display); font-size: 0.75rem; font-weight: 700; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.05em; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;
+}
+.hot-card-teams { display: flex; justify-content: space-between; align-items: center; }
+.hot-card .hc-team { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 600; width: 40%; text-align: center;}
+.hot-card .hc-team img { width: 32px; border-radius: 2px; }
+.hot-card .hc-vs { color: var(--t3); font-size: 0.8rem; font-weight: 700; }
+
+/* === 14. UTILITIES ==================================== */
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;

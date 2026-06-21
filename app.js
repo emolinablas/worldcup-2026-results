@@ -1188,6 +1188,7 @@ async function loadAndRender() {
     renderBracket(groups);
     renderGroups(groups);
     renderThirds(groups);
+    renderHotArea(groups);
     startCountdown(matches);
     setLastUpdate();
     scheduleRefresh(hasLive);
@@ -1205,7 +1206,190 @@ async function loadAndRender() {
 }
 
 // ============================================================
-// SECTION 15: INIT
+// SECTION 15: HOT AREA (PATH TRACING)
+// ============================================================
+
+function renderHotArea(groups) {
+  const wrap = document.getElementById('hotAreaContent');
+  if (!wrap) return;
+
+  // 1. Re-evaluate bracket to find where everyone is placed in R32
+  const standings = {};
+  const thirdPlaceRanked = rankThirdPlace(groups);
+  const top8Thirds = thirdPlaceRanked.slice(0, 8);
+  const qualifyingGroups = top8Thirds.map(t => t.fromGroup);
+  const annexC = resolveAnnexC(qualifyingGroups);
+
+  Object.entries(groups).forEach(([g, grp]) => {
+    standings[g] = grp.standings || [];
+  });
+
+  function getTeam(slot) {
+    const { type, group, eligible } = slot;
+    const groupStandings = standings[group] || [];
+    if (type === '1st' || type === '2nd') {
+      const idx = type === '1st' ? 0 : 1;
+      const team = groupStandings[idx];
+      return team ? team.name : null;
+    }
+    if (type === '3rd') {
+      const r32match = R32_MATCHES.find(r => r.team2.type === '3rd' && r.team2.eligible && eligible && r.team2.eligible.length === eligible.length && r.team2.eligible.every(g => eligible.includes(g)));
+      const matchId = r32match ? r32match.id : null;
+      const assignedGroup = matchId ? annexC[matchId] : null;
+      if (assignedGroup) {
+        const team = (standings[assignedGroup] || [])[2];
+        return team ? team.name : null;
+      }
+    }
+    return null;
+  }
+
+  // Map TeamName -> Starting Node (e.g. 'Argentina' -> 'M73')
+  const teamStarts = {};
+  R32_MATCHES.forEach(m => {
+    const t1 = getTeam(m.team1);
+    const t2 = getTeam(m.team2);
+    if (t1) teamStarts[t1] = m.id;
+    if (t2) teamStarts[t2] = m.id;
+  });
+
+  // Build routing map: Node -> Parent Node
+  const nodeParent = {};
+  Object.entries(BRACKET_TREE).forEach(([id, node]) => {
+    if (node.isThirdPlace) return; // Ignore 3rd place for championship path
+    node.from.forEach(childId => {
+      nodeParent[childId] = id;
+    });
+  });
+
+  // Function to trace path to final
+  function getPath(startNode) {
+    const path = [startNode];
+    let curr = startNode;
+    while (nodeParent[curr]) {
+      curr = nodeParent[curr];
+      path.push(curr);
+    }
+    return path;
+  }
+
+  // Stages naming
+  const stageNames = {
+    'R32': 'Dieciseisavos',
+    'R16': 'Octavos de Final',
+    'QF': 'Cuartos de Final',
+    'SF': 'Semifinales',
+    'FIN': 'La Gran Final'
+  };
+  function getStageName(nodeId) {
+    if (nodeId.startsWith('M')) return stageNames['R32'];
+    if (nodeId.startsWith('R16')) return stageNames['R16'];
+    if (nodeId.startsWith('QF')) return stageNames['QF'];
+    if (nodeId.startsWith('SF')) return stageNames['SF'];
+    if (nodeId.startsWith('FIN')) return stageNames['FIN'];
+    return 'Desconocido';
+  }
+
+  function checkClash(tA, tB) {
+    const nA = normKey(tA);
+    const nB = normKey(tB);
+    const realA = Object.keys(teamStarts).find(k => normKey(k) === nA);
+    const realB = Object.keys(teamStarts).find(k => normKey(k) === nB);
+    
+    if (!realA || !realB) return null; // One of them is not in bracket yet
+
+    const pathA = getPath(teamStarts[realA]);
+    const pathB = getPath(teamStarts[realB]);
+
+    // Find intersection
+    const intersection = pathA.find(node => pathB.includes(node));
+    if (intersection) {
+      return { teamA: realA, teamB: realB, node: intersection, stage: getStageName(intersection) };
+    }
+    return null;
+  }
+
+  // 1. Messi vs Ronaldo Clash (Argentina vs Portugal)
+  const goatClash = checkClash('Argentina', 'Portugal');
+  let bannerHTML = '';
+  if (goatClash) {
+    bannerHTML = `
+      <div class="hot-banner">
+        <h2>MESSI vs CR7</h2>
+        <div class="clash-status">¡Posible choque en ${goatClash.stage}!</div>
+        <div class="clash-teams">
+          <div class="clash-team">
+            <img src="${getFlagUrl(goatClash.teamA)}" alt="${goatClash.teamA}">
+            Argentina
+          </div>
+          <div class="vs">VS</div>
+          <div class="clash-team">
+            <img src="${getFlagUrl(goatClash.teamB)}" alt="${goatClash.teamB}">
+            Portugal
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    // If not both in bracket, show a pending state
+    bannerHTML = `
+      <div class="hot-banner" style="filter: grayscale(0.8); opacity: 0.8;">
+        <h2>MESSI vs CR7</h2>
+        <div class="clash-status">Esperando posiciones para proyectar cruce...</div>
+      </div>
+    `;
+  }
+
+  // 2. Check other favorites
+  const favorites = ['Brazil', 'France', 'Spain', 'England', 'Germany', 'Netherlands', 'Italy', 'Uruguay', 'Colombia'];
+  const otherClashes = [];
+  
+  for (let i = 0; i < favorites.length; i++) {
+    for (let j = i + 1; j < favorites.length; j++) {
+      const clash = checkClash(favorites[i], favorites[j]);
+      // Only show QF, SF, or FIN clashes to keep it "Hot"
+      if (clash && !clash.node.startsWith('M') && !clash.node.startsWith('R16')) {
+        otherClashes.push(clash);
+      }
+    }
+  }
+
+  let gridHTML = '';
+  if (otherClashes.length > 0) {
+    // Sort by depth (FINAL first, then SF, then QF)
+    const order = { 'FIN': 3, 'SF': 2, 'QF': 1 };
+    otherClashes.sort((a,b) => (order[b.node.substring(0,3)] || 0) - (order[a.node.substring(0,3)] || 0));
+
+    const cards = otherClashes.map(c => `
+      <div class="hot-card">
+        <div class="hot-card-hdr">Proyección: ${c.stage}</div>
+        <div class="hot-card-teams">
+          <div class="hc-team">
+            <img src="${getFlagUrl(c.teamA)}" alt="${c.teamA}">
+            <span>${shorten(c.teamA)}</span>
+          </div>
+          <div class="hc-vs">VS</div>
+          <div class="hc-team">
+            <img src="${getFlagUrl(c.teamB)}" alt="${c.teamB}">
+            <span>${shorten(c.teamB)}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    gridHTML = `
+      <h3 style="margin-top: 1rem; font-family: var(--ff-display); font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Choques de Titanes</h3>
+      <div class="hot-grid">
+        ${cards}
+      </div>
+    `;
+  }
+
+  wrap.innerHTML = bannerHTML + gridHTML;
+}
+
+// ============================================================
+// SECTION 16: INIT
 // ============================================================
 
 function init() {

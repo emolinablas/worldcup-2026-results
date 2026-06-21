@@ -400,7 +400,7 @@ function buildGroups(matches) {
   // Calculate stats for each group
   Object.values(groups).forEach(grp => {
     grp.matches.forEach(m => {
-      if (m.status !== 'finished' || m.score1 === null) return;
+      if ((m.status !== 'finished' && m.status !== 'live') || m.score1 === null) return;
       const t1 = grp.teams[m.team1];
       const t2 = grp.teams[m.team2];
       if (!t1 || !t2) return;

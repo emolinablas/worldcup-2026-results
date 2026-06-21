@@ -1404,3 +1404,30 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+// ============================================================
+// RESUME / VISIBILITY RECOVERY
+// Refetch data when user returns to the tab after suspension
+// ============================================================
+
+let _lastVisible = Date.now();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    _lastVisible = Date.now();
+  } else if (document.visibilityState === 'visible') {
+    // If the tab was hidden for more than 30 seconds, reload data
+    const hiddenMs = Date.now() - _lastVisible;
+    if (hiddenMs > 30000) {
+      loadAndRender();
+    }
+  }
+});
+
+// Handles iOS Safari's "back-forward cache" (bfcache) resume
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) {
+    // Page was restored from bfcache (navigated back/forward)
+    loadAndRender();
+  }
+});

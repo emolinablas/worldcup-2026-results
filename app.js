@@ -33,6 +33,7 @@ const STRINGS = {
     updated: 'Actualizado:',
     group: 'Grupo',
     pts: 'Pts', gf: 'GF', gc: 'GC', gd: 'DG', pj: 'PJ', w: 'G', d: 'E', l: 'P',
+    team: 'Equipo',
     slot_r32: 'Slot dieciseisavos',
     round_of_32: 'Dieciseisavos',
     round_of_16: 'Octavos de Final',
@@ -88,6 +89,7 @@ const STRINGS = {
     updated: 'Updated:',
     group: 'Group',
     pts: 'Pts', gf: 'GF', gc: 'GA', gd: 'GD', pj: 'MP', w: 'W', d: 'D', l: 'L',
+    team: 'Team',
     slot_r32: 'R32 Slot',
     round_of_32: 'Round of 32',
     round_of_16: 'Round of 16',
@@ -660,15 +662,15 @@ function renderBracket(groups) {
   hdr.className = 'bracket-col-hdr';
   hdr.style.cssText = `position:relative;width:${BB_W}px;height:28px;margin-bottom:4px;`;
   const roundLabels = [
-    { col:'R32L', label:'Dieciseisavos' },
-    { col:'R16L', label:'Octavos' },
-    { col:'QFL',  label:'Cuartos' },
-    { col:'SFL',  label:'Semis' },
+    { col:'R32L', label: t('round_of_32') },
+    { col:'R16L', label: t('round_of_16') },
+    { col:'QFL',  label: t('qf') },
+    { col:'SFL',  label: t('sf') },
     { col:'FIN',  label:'⭐ Final' },
-    { col:'SFR',  label:'Semis' },
-    { col:'QFR',  label:'Cuartos' },
-    { col:'R16R', label:'Octavos' },
-    { col:'R32R', label:'Dieciseisavos' },
+    { col:'SFR',  label: t('sf') },
+    { col:'QFR',  label: t('qf') },
+    { col:'R16R', label: t('round_of_16') },
+    { col:'R32R', label: t('round_of_32') },
   ];
   roundLabels.forEach(({ col, label }) => {
     const el = document.createElement('div');
@@ -1153,13 +1155,13 @@ function renderThirds(groups) {
     <thead>
       <tr>
         <th>#</th>
-        <th>Equipo</th>
-        <th title="Puntos">Pts</th>
-        <th title="Diferencia de Goles">DG</th>
-        <th title="Goles a Favor">GF</th>
-        <th title="Goles en Contra">GC</th>
-        <th title="Partidos Jugados">PJ</th>
-        <th>Slot dieciseisavos</th>
+        <th>${t('team')}</th>
+        <th title="${t('pts')}">${t('pts')}</th>
+        <th title="${t('gd')}">${t('gd')}</th>
+        <th title="${t('gf')}">${t('gf')}</th>
+        <th title="${t('gc')}">${t('gc')}</th>
+        <th title="${t('pj')}">${t('pj')}</th>
+        <th>${t('slot_r32')}</th>
       </tr>
     </thead>
     <tbody>${rows}</tbody>`;
@@ -1192,7 +1194,8 @@ function setLastUpdate() {
   const el = document.getElementById('updTime');
   if (el) {
     const now = new Date();
-    el.textContent = 'Actualizado: ' + now.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
+  const locale = _lang === 'en' ? 'en-US' : 'es-MX';
+    el.textContent = t('updated') + ' ' + now.toLocaleTimeString(locale, { hour:'2-digit', minute:'2-digit' });
   }
 }
 
@@ -1240,7 +1243,7 @@ function startCountdown(matches) {
 
   if (live.length > 0) {
     const m = live[0];
-    if (lbl) lbl.textContent = '🔴 EN VIVO:';
+    if (lbl) lbl.textContent = t('live_now');
     if (tms) tms.textContent = `${m.team1} ${m.score1 ?? ''} - ${m.score2 ?? ''} ${m.team2}`;
     if (_countdownInterval) clearInterval(_countdownInterval);
     document.getElementById('clkD').textContent = '--';
@@ -1251,13 +1254,13 @@ function startCountdown(matches) {
   }
 
   if (upcoming.length === 0) {
-    if (lbl) lbl.textContent = 'Próximo partido';
+    if (lbl) lbl.textContent = t('next_match');
     if (tms) tms.textContent = '—';
     return;
   }
 
   const next = upcoming[0];
-  if (lbl) lbl.textContent = 'Próximo partido:';
+  if (lbl) lbl.textContent = t('next_match');
   if (tms) tms.textContent = `${next.team1} vs ${next.team2}`;
 
   function tick() {
@@ -1427,11 +1430,11 @@ function renderHotArea(groups) {
 
   // Stages naming
   const stageNames = {
-    'R32': 'Dieciseisavos',
-    'R16': 'Octavos de Final',
-    'QF': 'Cuartos de Final',
-    'SF': 'Semifinales',
-    'FIN': 'La Gran Final'
+    'R32': t('round_of_32'),
+    'R16': t('round_of_16'),
+    'QF':  t('qf'),
+    'SF':  t('sf'),
+    'FIN': t('final'),
   };
   function getStageName(nodeId) {
     if (nodeId.startsWith('M')) return stageNames['R32'];
@@ -1467,8 +1470,8 @@ function renderHotArea(groups) {
   if (goatClash) {
     bannerHTML = `
       <div class="hot-banner">
-        <h2>MESSI vs CR7</h2>
-        <div class="clash-status">¡Posible choque en ${goatClash.stage}!</div>
+        <h2>${t('messi_cr7')}</h2>
+        <div class="clash-status">${t('clash_in')} ${goatClash.stage}!</div>
         <div class="clash-teams">
           <div class="clash-team">
             <img src="${getFlagUrl(goatClash.teamA)}" alt="${goatClash.teamA}">
@@ -1486,8 +1489,8 @@ function renderHotArea(groups) {
     // If not both in bracket, show a pending state
     bannerHTML = `
       <div class="hot-banner" style="filter: grayscale(0.8); opacity: 0.8;">
-        <h2>MESSI vs CR7</h2>
-        <div class="clash-status">Esperando posiciones para proyectar cruce...</div>
+        <h2>${t('messi_cr7')}</h2>
+        <div class="clash-status">${t('clash_waiting')}</div>
       </div>
     `;
   }
@@ -1514,7 +1517,7 @@ function renderHotArea(groups) {
 
     const cards = otherClashes.map(c => `
       <div class="hot-card">
-        <div class="hot-card-hdr">Proyección: ${c.stage}</div>
+        <div class="hot-card-hdr">${t('clash_label')} ${c.stage}</div>
         <div class="hot-card-teams">
           <div class="hc-team">
             <img src="${getFlagUrl(c.teamA)}" alt="${c.teamA}">
@@ -1530,7 +1533,7 @@ function renderHotArea(groups) {
     `).join('');
 
     gridHTML = `
-      <h3 style="margin-top: 1rem; font-family: var(--ff-display); font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Choques de Titanes</h3>
+      <h3 style="margin-top: 1rem; font-family: var(--ff-display); font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">${t('clashes_title')}</h3>
       <div class="hot-grid">
         ${cards}
       </div>

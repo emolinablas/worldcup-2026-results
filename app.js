@@ -1210,7 +1210,7 @@ async function loadAndRender() {
 // ============================================================
 
 function renderHotArea(groups) {
-  const wrap = document.getElementById('hotAreaContent');
+  const wrap = document.getElementById('hotContent');
   if (!wrap) return;
 
   // 1. Re-evaluate bracket to find where everyone is placed in R32

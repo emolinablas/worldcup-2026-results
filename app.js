@@ -5,6 +5,158 @@
 'use strict';
 
 // ============================================================
+// SECTION 0: INTERNATIONALIZATION (i18n)
+// ============================================================
+
+const STRINGS = {
+  es: {
+    hdr_sub: 'Cuadro de Llaves · Tiempo Real',
+    connecting: 'Conectando...',
+    next_match: 'Próximo partido:',
+    live_now: '🔴 EN VIVO:',
+    tab_bracket: 'Cuadro de Llaves',
+    tab_groups: 'Grupos',
+    tab_thirds: 'Mejores Terceros',
+    tab_hot: 'Zona Caliente',
+    loading_bracket: 'Cargando datos del torneo...',
+    loading_groups: 'Cargando grupos...',
+    loading_thirds: 'Calculando clasificación...',
+    loading_hot: 'Analizando rutas y choques...',
+    leg_confirmed: 'Clasificado',
+    leg_projected: 'Proyectado',
+    leg_tbd: 'Por definir',
+    leg_live: 'En vivo',
+    leg_done: 'Jugado',
+    thirds_title: 'Mejores Terceros del Torneo',
+    thirds_desc: 'Los 8 mejores de los 12 equipos en tercer lugar clasifican a los Dieciseisavos de Final.',
+    footer: 'Desarrollado con 🤍 por Ever Molina',
+    updated: 'Actualizado:',
+    group: 'Grupo',
+    pts: 'Pts', gf: 'GF', gc: 'GC', gd: 'DG', pj: 'PJ', w: 'G', d: 'E', l: 'P',
+    slot_r32: 'Slot dieciseisavos',
+    round_of_32: 'Dieciseisavos',
+    round_of_16: 'Octavos de Final',
+    qf: 'Cuartos de Final',
+    sf: 'Semifinales',
+    final: 'La Gran Final',
+    third_place: '3er Puesto',
+    qualified: 'Clasificado',
+    projected: 'Proyectado',
+    tbd: 'Por definir',
+    group_prefix: 'Grupo',
+    clash_label: 'Proyección:',
+    clashes_title: 'Choques de Titanes',
+    messi_cr7: 'MESSI vs CR7',
+    clash_waiting: 'Esperando posiciones para proyectar cruce...',
+    clash_in: 'Posible choque en',
+    tut_title_0: 'Bienvenido al Tracker del Mundial 2026',
+    tut_body_0: 'Esta app sigue los partidos en tiempo real y proyecta el cuadro de llaves completo basandose en los resultados actuales.',
+    tut_title_1: 'Cuadro de Llaves',
+    tut_body_1: 'Visualiza el bracket completo del torneo. Los equipos confirmados ya clasificaron; los proyectados lideran su grupo actualmente.',
+    tut_title_2: 'Tabla de Grupos',
+    tut_body_2: 'Consulta la tabla de posiciones de los 12 grupos con puntos, diferencia de goles y clasificacion en tiempo real.',
+    tut_title_3: 'Mejores Terceros',
+    tut_body_3: 'Los 8 mejores terceros lugares de los 12 grupos tambien clasifican. Esta vista te muestra quienes entrarian con los resultados actuales.',
+    tut_title_4: 'Zona Caliente',
+    tut_body_4: 'Se enfrentarian Messi y CR7? Esta seccion proyecta los choques explosivos entre los grandes favoritos.',
+    tut_prev: 'Anterior',
+    tut_next: 'Siguiente',
+    tut_finish: 'Entendido!',
+    lang_switch_label: '🇺🇸 EN',
+  },
+  en: {
+    hdr_sub: 'Bracket · Live Tracker',
+    connecting: 'Connecting...',
+    next_match: 'Next match:',
+    live_now: '🔴 LIVE:',
+    tab_bracket: 'Bracket',
+    tab_groups: 'Groups',
+    tab_thirds: 'Best Third-Places',
+    tab_hot: 'Hot Zone',
+    loading_bracket: 'Loading tournament data...',
+    loading_groups: 'Loading groups...',
+    loading_thirds: 'Calculating standings...',
+    loading_hot: 'Analyzing paths and clashes...',
+    leg_confirmed: 'Qualified',
+    leg_projected: 'Projected',
+    leg_tbd: 'TBD',
+    leg_live: 'Live',
+    leg_done: 'Played',
+    thirds_title: 'Best Third-Place Teams',
+    thirds_desc: 'The 8 best third-place teams (out of 12 groups) advance to the Round of 32.',
+    footer: 'Built with 🤍 by Ever Molina',
+    updated: 'Updated:',
+    group: 'Group',
+    pts: 'Pts', gf: 'GF', gc: 'GA', gd: 'GD', pj: 'MP', w: 'W', d: 'D', l: 'L',
+    slot_r32: 'R32 Slot',
+    round_of_32: 'Round of 32',
+    round_of_16: 'Round of 16',
+    qf: 'Quarterfinals',
+    sf: 'Semifinals',
+    final: 'The Grand Final',
+    third_place: '3rd Place',
+    qualified: 'Qualified',
+    projected: 'Projected',
+    tbd: 'TBD',
+    group_prefix: 'Group',
+    clash_label: 'Projected:',
+    clashes_title: 'Titans Clash',
+    messi_cr7: 'MESSI vs CR7',
+    clash_waiting: 'Waiting for standings to project the clash...',
+    clash_in: 'Possible clash in',
+    tut_title_0: 'Welcome to the World Cup 2026 Tracker',
+    tut_body_0: 'This app follows matches in real time and projects the full bracket based on current standings.',
+    tut_title_1: 'Bracket View',
+    tut_body_1: 'See the full tournament bracket. Confirmed teams have clinched; projected teams currently lead their group.',
+    tut_title_2: 'Group Standings',
+    tut_body_2: 'Check live standings for all 12 groups with points, goal difference, and live scores.',
+    tut_title_3: 'Best Third-Places',
+    tut_body_3: 'The 8 best third-place teams also qualify. This view shows who would advance based on current results.',
+    tut_title_4: 'Hot Zone',
+    tut_body_4: 'Could Messi and CR7 clash? Brazil vs. France in the Semis? This section projects explosive showdowns between top favorites.',
+    tut_prev: 'Previous',
+    tut_next: 'Next',
+    tut_finish: 'Got it!',
+    lang_switch_label: '🇲🇽 ES',
+  },
+};
+
+// Auto-detect language: saved preference > browser language > Spanish default
+const _savedLang = localStorage.getItem('wc26_lang');
+const _browserLang = (navigator.language || navigator.userLanguage || 'es').toLowerCase().startsWith('en') ? 'en' : 'es';
+let _lang = _savedLang || _browserLang;
+
+function t(key) {
+  return (STRINGS[_lang] && STRINGS[_lang][key]) || (STRINGS['es'][key]) || key;
+}
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const val = t(key);
+    if (val) el.textContent = val;
+  });
+  // Update html lang attribute
+  document.documentElement.lang = _lang;
+  // Update lang button label
+  const btn = document.getElementById('langBtnLabel');
+  if (btn) btn.textContent = t('lang_switch_label');
+}
+
+function setupLang() {
+  applyI18n();
+  const btn = document.getElementById('langBtn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    _lang = _lang === 'es' ? 'en' : 'es';
+    localStorage.setItem('wc26_lang', _lang);
+    applyI18n();
+    translateTutorial();   // re-translate tutorial text immediately
+    loadAndRender();
+  });
+}
+
+// ============================================================
 // SECTION 1: CONSTANTS
 // ============================================================
 
@@ -1393,9 +1545,98 @@ function renderHotArea(groups) {
 // ============================================================
 
 function init() {
+  setupLang();
+  setupTutorial();
   setupTabs();
   setupRefreshBtn();
   loadAndRender();
+}
+
+// ============================================================
+// SECTION 17: TUTORIAL
+// ============================================================
+
+function setupTutorial() {
+  const overlay = document.getElementById('tutorialOverlay');
+  const closeBtn = document.getElementById('tutorialClose');
+  const prevBtn  = document.getElementById('tutPrev');
+  const nextBtn  = document.getElementById('tutNext');
+  const finishBtn = document.getElementById('tutFinish');
+  const steps = document.querySelectorAll('.tutorial-step');
+  const dots  = document.querySelectorAll('.tdot');
+  if (!overlay) return;
+
+  let current = 0;
+  const total = steps.length;
+
+  function goTo(idx) {
+    steps.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    steps[idx].classList.add('active');
+    dots[idx].classList.add('active');
+    current = idx;
+
+    // Show/hide buttons
+    prevBtn.classList.toggle('hidden', idx === 0);
+    if (idx === total - 1) {
+      nextBtn.classList.add('hidden');
+      finishBtn.classList.remove('hidden');
+    } else {
+      nextBtn.classList.remove('hidden');
+      finishBtn.classList.add('hidden');
+    }
+  }
+
+  function openTutorial() {
+    overlay.classList.add('visible');
+    goTo(0);
+  }
+
+  function closeTutorial() {
+    overlay.classList.remove('visible');
+    localStorage.setItem('wc26_tutorial_done', '1');
+  }
+
+  // Show on first visit
+  if (!localStorage.getItem('wc26_tutorial_done')) {
+    setTimeout(openTutorial, 800);
+  }
+
+  // Help button always opens it
+  const helpBtn = document.getElementById('helpBtn');
+  if (helpBtn) helpBtn.addEventListener('click', openTutorial);
+
+  closeBtn.addEventListener('click', closeTutorial);
+  finishBtn.addEventListener('click', closeTutorial);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeTutorial(); });
+
+  prevBtn.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+  nextBtn.addEventListener('click', () => { if (current < total - 1) goTo(current + 1); });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => goTo(parseInt(dot.dataset.step)));
+  });
+
+  // Translate tutorial content on setup
+  translateTutorial();
+
+  goTo(0);
+}
+
+/** Re-translates all tutorial text — call after language change */
+function translateTutorial() {
+  document.querySelectorAll('.tutorial-step').forEach((step, i) => {
+    const h2 = step.querySelector('h2');
+    const p  = step.querySelector('p');
+    if (h2) h2.textContent = t('tut_title_' + i);
+    if (p)  p.textContent  = t('tut_body_' + i);
+  });
+  const prevBtn   = document.getElementById('tutPrev');
+  const nextBtn   = document.getElementById('tutNext');
+  const finishBtn = document.getElementById('tutFinish');
+  if (prevBtn)   prevBtn.textContent   = t('tut_prev');
+  if (nextBtn)   nextBtn.textContent   = t('tut_next');
+  if (finishBtn) finishBtn.textContent = t('tut_finish');
 }
 
 // Boot

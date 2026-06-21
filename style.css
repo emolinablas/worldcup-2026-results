@@ -718,4 +718,95 @@ header, nav, main, .next-bar { position: relative; z-index: 1; }
 @media (max-width: 480px) {
   .hdr-icon { font-size: 1.2rem; }
   .clk-unit b { font-size: 0.8rem; }
+  .tab span { display: none; }
+  .tab svg { display: block; }
 }
+
+/* === 15. TUTORIAL MODAL =============================== */
+.hidden { display: none !important; }
+
+.tutorial-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  align-items: center; justify-content: center;
+}
+.tutorial-overlay.visible { display: flex; }
+
+.tutorial-modal {
+  background: var(--bg-2);
+  border: 1px solid var(--border-h);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-lg), var(--sh-gold);
+  padding: 2rem 1.5rem 1.5rem;
+  max-width: 420px; width: 90%;
+  position: relative;
+  animation: fadeSlideUp 0.3s var(--ease);
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tutorial-close {
+  position: absolute; top: 1rem; right: 1rem;
+  font-size: 1rem; color: var(--t3);
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.tutorial-close:hover { background: var(--card-h); color: var(--t1); }
+
+.tutorial-step { display: none; text-align: center; padding: 0.5rem 0 1.5rem; }
+.tutorial-step.active { display: block; }
+.tutorial-icon { font-size: 3rem; margin-bottom: 1rem; line-height: 1; }
+.tutorial-step h2 {
+  font-family: var(--ff-display); font-size: 1.3rem; font-weight: 800;
+  color: var(--t1); margin-bottom: 0.75rem;
+}
+.tutorial-step p { font-size: 0.9rem; color: var(--t2); line-height: 1.6; }
+.tutorial-step p strong { color: var(--gold); }
+
+.tutorial-nav {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.tutorial-dots { display: flex; gap: 0.5rem; }
+.tdot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border); transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.tdot.active { background: var(--gold); transform: scale(1.25); }
+
+.tutorial-btns { display: flex; gap: 0.75rem; }
+.tut-btn {
+  padding: 0.6rem 1.4rem; border-radius: var(--r-md);
+  font-family: var(--ff-display); font-size: 0.85rem; font-weight: 700;
+  transition: var(--tr);
+}
+.tut-prev {
+  background: var(--card); border: 1px solid var(--border); color: var(--t2);
+}
+.tut-prev:hover { background: var(--card-h); color: var(--t1); }
+.tut-next, .tut-finish {
+  background: var(--gold); color: #000;
+}
+.tut-next:hover, .tut-finish:hover { background: var(--gold-lt); }
+
+/* === 16. LANGUAGE BUTTON ============================== */
+.lang-btn {
+  font-family: var(--ff-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--t2);
+  transition: var(--tr);
+  white-space: nowrap;
+}
+.lang-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-bg); }

@@ -318,23 +318,9 @@ let _lastSource = '';
 async function fetchData() {
   // Strategy:
   // 1. openfootball = always the structural base (groups, fixtures, schedules)
-  // 2. ESPN = overlay real-time scores on top of the base data
-  // 3. worldcup26.ir = complete replacement if it works (has live data + groups)
+  // 2. ESPN = overlay real-time scores on top
 
-  // Try worldcup26.ir first — it has everything if available
-  try {
-    const data = await withTimeout(fetchFromWorldcup26(), 5000);
-    const withGroups = data.filter(m => m.group);
-    if (withGroups.length >= 20) {
-      _lastSource = 'worldcup26.ir';
-      setSourceBadge('worldcup26.ir', 'live');
-      return data;
-    }
-  } catch (e) {
-    console.warn('[worldcup26.ir] falló:', e.message);
-  }
-
-  // Always load openfootball as base (reliable, has all 104 matches with groups)
+  // Always load openfootball as base (has all 104 matches with group info)
   let base = [];
   try {
     base = await withTimeout(fetchFromOpenfootball(), 8000);
@@ -352,8 +338,8 @@ async function fetchData() {
     const liveCount = merged.filter(m => m.status === 'live').length;
     const playedCount = merged.filter(m => m.status === 'finished').length;
     console.log(`[ESPN] ${espnMatches.length} partidos ESPN, ${playedCount} jugados, ${liveCount} en vivo`);
-    _lastSource = liveCount > 0 ? 'ESPN (en vivo)' : 'ESPN + openfootball';
-    setSourceBadge(_lastSource, liveCount > 0 ? 'live' : 'live');
+    _lastSource = liveCount > 0 ? 'ESPN Live' : 'ESPN + openfootball';
+    setSourceBadge(_lastSource, 'live');
     return merged;
   } catch (e) {
     console.warn('[ESPN] falló:', e.message);
@@ -479,12 +465,15 @@ function normalizeOpenfoot(m) {
 }
 
 async function fetchFromESPN() {
-  // ESPN unofficial scoreboard — fetch all group stage dates in parallel
+  // ESPN unofficial scoreboard — full tournament date range (Jun 11 – Jul 15)
   const dates = [
     '20260611','20260612','20260613','20260614','20260615',
     '20260616','20260617','20260618','20260619','20260620',
     '20260621','20260622','20260623','20260624','20260625','20260626',
     '20260627','20260628','20260629','20260630',
+    '20260701','20260702','20260703','20260704','20260705','20260706',
+    '20260707','20260708','20260709','20260710','20260711','20260712',
+    '20260713','20260714','20260715',
   ];
   const allMatches = [];
   const results = await Promise.allSettled(

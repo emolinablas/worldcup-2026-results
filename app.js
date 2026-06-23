@@ -64,6 +64,10 @@ const STRINGS = {
     tut_next: 'Siguiente',
     tut_finish: 'Entendido!',
     lang_switch_label: '🇺🇸 EN',
+    kofi_msg: '¿Disfrutando la app?',
+    kofi_sub: 'Puedes regalarme un cafecito para seguir mejorándola ☕',
+    kofi_btn: '☕ Invítame un café',
+    kofi_dismiss: 'Ahora no',
   },
   en: {
     hdr_sub: 'Bracket · Live Tracker',
@@ -120,6 +124,10 @@ const STRINGS = {
     tut_next: 'Next',
     tut_finish: 'Got it!',
     lang_switch_label: '🇲🇽 ES',
+    kofi_msg: 'Enjoying the app?',
+    kofi_sub: 'You can buy me a coffee to keep it going ☕',
+    kofi_btn: '☕ Buy me a coffee',
+    kofi_dismiss: 'Maybe later',
   },
 };
 
@@ -1539,9 +1547,57 @@ function renderHotArea(groups) {
 function init() {
   setupLang();
   setupTutorial();
+  setupKofi();
   setupTabs();
   setupRefreshBtn();
   loadAndRender();
+}
+
+// ============================================================
+// SECTION 18: KO-FI DONATION TOAST
+// ============================================================
+
+function setupKofi() {
+  const KOFI_URL  = 'https://ko-fi.com/evermolina';
+  const STORAGE_KEY = 'wc26_kofi_dismissed';
+
+  // Don't show if dismissed in the last 3 days
+  const lastDismissed = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+  const threeDays = 3 * 24 * 60 * 60 * 1000;
+  if (Date.now() - lastDismissed < threeDays) return;
+
+  // Build the toast element
+  const toast = document.createElement('div');
+  toast.id = 'kofiToast';
+  toast.innerHTML = `
+    <button class="kofi-close" id="kofiClose" aria-label="${t('kofi_dismiss')}">✕</button>
+    <div class="kofi-body">
+      <div class="kofi-icon">☕</div>
+      <div class="kofi-text">
+        <strong class="kofi-title">${t('kofi_msg')}</strong>
+        <span class="kofi-sub">${t('kofi_sub')}</span>
+      </div>
+    </div>
+    <a class="kofi-cta" href="${KOFI_URL}" target="_blank" rel="noopener">${t('kofi_btn')}</a>
+  `;
+  document.body.appendChild(toast);
+
+  // Dismiss handler
+  function dismiss() {
+    toast.classList.remove('kofi-visible');
+    toast.classList.add('kofi-hiding');
+    localStorage.setItem(STORAGE_KEY, String(Date.now()));
+    setTimeout(() => toast.remove(), 400);
+  }
+
+  document.getElementById('kofiClose').addEventListener('click', dismiss);
+  // Dismiss if user clicks the CTA (they already acted)
+  toast.querySelector('.kofi-cta').addEventListener('click', dismiss);
+
+  // Show after 45 seconds
+  setTimeout(() => {
+    toast.classList.add('kofi-visible');
+  }, 45000);
 }
 
 // ============================================================

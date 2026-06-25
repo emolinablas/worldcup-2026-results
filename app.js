@@ -68,6 +68,16 @@ const STRINGS = {
     kofi_sub: 'Puedes regalarme un cafecito para seguir mejorándola ☕',
     kofi_btn: '☕ Invítame un café',
     kofi_dismiss: 'Ahora no',
+    tab_today: 'Hoy',
+    loading_today: 'Cargando partidos de hoy...',
+    no_matches_today: 'No hay partidos programados para hoy.',
+    match_status_live: '🔴 EN VIVO',
+    match_status_final: 'Final',
+    match_status_upcoming: 'Próximo',
+    your_tz: 'Hora en tu zona horaria',
+    venue: 'Estadio',
+    today_heading: 'Partidos de Hoy',
+    today_subtitle: 'Horarios en tu zona horaria local',
   },
   en: {
     hdr_sub: 'Bracket · Live Tracker',
@@ -128,6 +138,16 @@ const STRINGS = {
     kofi_sub: 'You can buy me a coffee to keep it going ☕',
     kofi_btn: '☕ Buy me a coffee',
     kofi_dismiss: 'Maybe later',
+    tab_today: 'Today',
+    loading_today: 'Loading today\'s matches...',
+    no_matches_today: 'No matches scheduled for today.',
+    match_status_live: '🔴 LIVE',
+    match_status_final: 'Final',
+    match_status_upcoming: 'Upcoming',
+    your_tz: 'Time in your timezone',
+    venue: 'Venue',
+    today_heading: "Today's Matches",
+    today_subtitle: 'Times shown in your local timezone',
   },
 };
 
@@ -468,6 +488,7 @@ function normalizeOpenfoot(m) {
     status: played ? 'finished' : 'scheduled',
     date: m.date || '',
     time: m.time || '',
+    ground: m.ground || '',
     round: m.round || (g ? 'Group Stage' : 'Knockout'),
   };
 }
@@ -1348,9 +1369,11 @@ async function loadAndRender() {
     renderGroups(groups);
     renderThirds(groups);
     renderHotArea(groups);
+    renderToday(matches);
     startCountdown(matches);
     setLastUpdate();
     scheduleRefresh(hasLive);
+    updateTodayTabBadge(matches);
   } catch (err) {
     console.error('[Mundial 2026]', err);
     const wrap = document.getElementById('bracketWrap');
@@ -1548,7 +1571,163 @@ function renderHotArea(groups) {
 }
 
 // ============================================================
-// SECTION 16: INIT
+// SECTION 16: TODAY'S MATCHES
+// ============================================================
+
+/**
+ * Parse an openfootball time string like "19:00 UTC-6" on a given date string
+ * and return a proper UTC Date object.
+ */
+function parseMatchDateTime(dateStr, timeStr) {
+  if (!dateStr || !timeStr) return null;
+  const m = timeStr.match(/(\d{1,2}):(\d{2})\s*UTC([+-]\d+(?:\.\d+)?)/i);
+  if (!m) return null;
+  const hh = parseInt(m[1], 10);
+  const mm = parseInt(m[2], 10);
+  const offsetHours = parseFloat(m[3]);
+  // Build a UTC timestamp: local_time - utc_offset = UTC
+  const utc = new Date(`${dateStr}T${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:00Z`);
+  utc.setUTCHours(utc.getUTCHours() - offsetHours);
+  return utc;
+}
+
+function renderToday(matches) {
+  const wrap = document.getElementById('todayContent');
+  if (!wrap) return;
+
+  // Detect user timezone
+  const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  // Today's date in the user's local timezone (YYYY-MM-DD)
+  const nowLocal = new Date();
+  const todayStr = [
+    nowLocal.getFullYear(),
+    String(nowLocal.getMonth() + 1).padStart(2, '0'),
+    String(nowLocal.getDate()).padStart(2, '0'),
+  ].join('-');
+
+  // Filter matches for today — match by the DATE in the user's local timezone
+  // ESPN gives UTC dates, openfootball uses venue-local date; use venue date first
+  const todayMatches = matches.filter(m => {
+    if (!m.date) return false;
+    // If we have a parsed UTC time, verify using local conversion
+    if (m.time) {
+      const utc = parseMatchDateTime(m.date, m.time);
+      if (utc) {
+        const localDateStr = utc.toLocaleDateString('en-CA', { timeZone: userTZ });
+        return localDateStr === todayStr;
+      }
+    }
+    return m.date === todayStr;
+  });
+
+  // Sort by kick-off time
+  todayMatches.sort((a, b) => {
+    const ta = parseMatchDateTime(a.date, a.time);
+    const tb = parseMatchDateTime(b.date, b.time);
+    if (!ta) return 1; if (!tb) return -1;
+    return ta - tb;
+  });
+
+  // Timezone display abbreviation
+  const tzLabel = new Intl.DateTimeFormat(_lang === 'en' ? 'en-US' : 'es-MX', {
+    timeZone: userTZ, timeZoneName: 'short'
+  }).formatToParts(new Date()).find(p => p.type === 'timeZoneName')?.value || userTZ;
+
+  if (todayMatches.length === 0) {
+    wrap.innerHTML = `
+      <div class="today-empty">
+        <div class="today-empty-icon">📅</div>
+        <p>${t('no_matches_today')}</p>
+      </div>`;
+    return;
+  }
+
+  const cards = todayMatches.map(m => {
+    const utcDate = parseMatchDateTime(m.date, m.time);
+    let timeDisplay = '';
+    let timeSubDisplay = '';
+
+    if (utcDate) {
+      timeDisplay = utcDate.toLocaleTimeString(_lang === 'en' ? 'en-US' : 'es-MX', {
+        hour: '2-digit', minute: '2-digit', timeZone: userTZ
+      });
+      timeSubDisplay = tzLabel;
+    }
+
+    const isLive     = m.status === 'live';
+    const isFinished = m.status === 'finished';
+
+    let statusHTML = '';
+    if (isLive) {
+      statusHTML = `<span class="td-status td-live">${t('match_status_live')}</span>`;
+    } else if (isFinished) {
+      statusHTML = `<span class="td-status td-final">${t('match_status_final')}</span>`;
+    } else {
+      statusHTML = `<span class="td-status td-upcoming">${timeDisplay}</span>`;
+    }
+
+    const groupBadge = m.group ? `<span class="td-group">${t('group_prefix')} ${m.group}</span>` : '';
+    const venueTxt   = m.ground ? `<span class="td-venue">📍 ${m.ground}</span>` : '';
+
+    const score1 = (isLive || isFinished) && m.score1 != null ? m.score1 : '';
+    const score2 = (isLive || isFinished) && m.score2 != null ? m.score2 : '';
+    const showScore = score1 !== '' || score2 !== '';
+    const scoreHTML = showScore
+      ? `<div class="td-score ${isLive ? 'td-score-live' : ''}">${score1} <span>-</span> ${score2}</div>`
+      : `<div class="td-score td-score-vs">VS</div>`;
+
+    const f1 = getFlagUrl(m.team1);
+    const f2 = getFlagUrl(m.team2);
+
+    return `
+      <div class="td-card ${isLive ? 'td-card-live' : isFinished ? 'td-card-done' : ''}">
+        <div class="td-card-top">
+          ${statusHTML}
+          <div class="td-meta">${groupBadge}${venueTxt}</div>
+        </div>
+        <div class="td-matchup">
+          <div class="td-team">
+            ${f1 ? `<img class="td-flag" src="${f1}" alt="${m.team1}" onerror="this.style.display='none'">` : ''}
+            <span class="td-name">${m.team1}</span>
+          </div>
+          ${scoreHTML}
+          <div class="td-team td-team-right">
+            <span class="td-name">${m.team2}</span>
+            ${f2 ? `<img class="td-flag" src="${f2}" alt="${m.team2}" onerror="this.style.display='none'">` : ''}
+          </div>
+        </div>
+        ${isLive || !showScore ? '' : `<div class="td-time-row">🕐 ${timeDisplay} <span class="td-tz">${timeSubDisplay}</span></div>`}
+      </div>
+    `;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div class="today-header">
+      <h2>${t('today_heading')}</h2>
+      <p class="today-subtitle">${t('today_subtitle')} · <strong>${tzLabel}</strong></p>
+    </div>
+    <div class="td-grid">${cards}</div>
+  `;
+}
+
+function updateTodayTabBadge(matches) {
+  const tab = document.getElementById('tabToday');
+  if (!tab) return;
+  const liveCount = matches.filter(m => m.status === 'live').length;
+  // Remove old badge
+  const old = tab.querySelector('.tab-live-badge');
+  if (old) old.remove();
+  if (liveCount > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'tab-live-badge';
+    badge.textContent = liveCount;
+    tab.appendChild(badge);
+  }
+}
+
+// ============================================================
+// SECTION 17: INIT
 // ============================================================
 
 function init() {

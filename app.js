@@ -709,6 +709,11 @@ function renderBracket(groups) {
     standings[g] = grp.standings || [];
   });
 
+  // ALL 12 groups must be done before any 3rd-place slot can be "confirmed"
+  // (because top-8 ranking requires knowing every group's 3rd place)
+  const allGroupsCompleted = Object.values(groupsCompleted).length === 12 &&
+                             Object.values(groupsCompleted).every(Boolean);
+
   // Helper to resolve team info for a slot
   function resolveTeam(slot) {
     const { type, group, eligible } = slot;
@@ -718,6 +723,7 @@ function renderBracket(groups) {
       const idx = type === '1st' ? 0 : 1;
       const team = groupStandings[idx];
       if (!team) return { name: `1º Grupo ${group}`, status: 'tbd', flag: '' };
+      // A 1st/2nd place is confirmed once their own group finishes
       const confirmed = groupsCompleted[group] || false;
       return {
         name: team.name,
@@ -744,10 +750,11 @@ function renderBracket(groups) {
         const grpStandings = standings[assignedGroup] || [];
         const team = grpStandings[2]; // 3rd place team
         if (team) {
-          const confirmed = groupsCompleted[assignedGroup] || false;
+          // 3rd place can only be CONFIRMED when ALL groups are done
+          // — only then we know definitively the top-8 third places
           return {
             name: team.name,
-            status: confirmed ? 'confirmed' : 'projected',
+            status: allGroupsCompleted ? 'confirmed' : 'projected',
             flag: getFlagUrl(team.name),
             pts: team.pts,
             note: `3° Grupo ${assignedGroup}`,

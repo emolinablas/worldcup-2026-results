@@ -78,6 +78,9 @@ const STRINGS = {
     venue: 'Estadio',
     today_heading: 'Partidos de Hoy',
     today_subtitle: 'Horarios en tu zona horaria local',
+    winner_abbr: 'Gan.',
+    loser_abbr: 'Perd.',
+    third_place_medal: 'Tercer Lugar',
   },
   en: {
     hdr_sub: 'Bracket · Live Tracker',
@@ -148,6 +151,9 @@ const STRINGS = {
     venue: 'Venue',
     today_heading: "Today's Matches",
     today_subtitle: 'Times shown in your local timezone',
+    winner_abbr: 'Win.',
+    loser_abbr: 'Los.',
+    third_place_medal: 'Third Place',
   },
 };
 
@@ -743,7 +749,7 @@ function renderBracket(groups) {
     if (type === '1st' || type === '2nd') {
       const idx = type === '1st' ? 0 : 1;
       const team = groupStandings[idx];
-      if (!team) return { name: `1º Grupo ${group}`, status: 'tbd', flag: '' };
+      if (!team) return { name: `${idx===0?'1º':'2º'} ${t('group_prefix')} ${group}`, status: 'tbd', flag: '' };
       // A 1st/2nd place is confirmed once their own group finishes
       const confirmed = groupsCompleted[group] || false;
       return {
@@ -778,14 +784,14 @@ function renderBracket(groups) {
             status: allGroupsCompleted ? 'confirmed' : 'projected',
             flag: getFlagUrl(team.name),
             pts: team.pts,
-            note: `3° Grupo ${assignedGroup}`,
+            note: `3° ${t('group_prefix')} ${assignedGroup}`,
           };
         }
       }
 
       // Not yet determined — show eligible groups
       const eligibleStr = eligible ? eligible.join('/') : '?';
-      return { name: `3° (${eligibleStr})`, status: 'tbd', flag: '', note: `Grupos ${eligibleStr}` };
+      return { name: `3° (${eligibleStr})`, status: 'tbd', flag: '', note: `${t('tab_groups')} ${eligibleStr}` };
     }
 
     return { name: '—', status: 'tbd', flag: '' };
@@ -826,9 +832,9 @@ function renderBracket(groups) {
     // Try to project the winner from the previous round's projected teams
     function getProjected(fromId) {
       const prev = r32Results[fromId];
-      if (!prev) return { name: `Gan. ${fromId}`, status: 'tbd', flag: '' };
+      if (!prev) return { name: `${t('winner_abbr')} ${fromId}`, status: 'tbd', flag: '' };
       // We don't know the winner yet, show as TBD but with a hint
-      return { name: `Gan. ${fromId}`, status: 'tbd', flag: '' };
+      return { name: `${t('winner_abbr')} ${fromId}`, status: 'tbd', flag: '' };
     }
 
     let t1 = getProjected(from[0]);
@@ -836,11 +842,11 @@ function renderBracket(groups) {
 
     // If this is the 3rd place match, show loser hint
     if (isThirdPlace) {
-      t1 = { name: `Perd. ${from[0]}`, status: 'tbd', flag: '' };
-      t2 = { name: `Perd. ${from[1]}`, status: 'tbd', flag: '' };
+      t1 = { name: `${t('loser_abbr')} ${from[0]}`, status: 'tbd', flag: '' };
+      t2 = { name: `${t('loser_abbr')} ${from[1]}`, status: 'tbd', flag: '' };
     }
 
-    const label = isThirdPlace ? '3er Puesto' : matchId.replace('-', ' ');
+    const label = isThirdPlace ? t('third_place') : matchId.replace('-', ' ');
     const cssExtra = matchId === 'FINAL' ? ' mc-final' : isThirdPlace ? ' mc-3rd' : '';
 
     const card = createMatchCard({
@@ -870,7 +876,7 @@ function renderBracket(groups) {
 
   // 3rd place separator label
   const label3rd = document.createElement('div');
-  label3rd.textContent = '🥉 Tercer Lugar';
+  label3rd.textContent = '🥉 ' + t('third_place_medal');
   label3rd.style.cssText = `
     position:absolute; left:${COL_X['FIN']}px; width:${BC_W}px; text-align:center;
     top:${5.5 * BS_H - 20}px;
@@ -920,7 +926,7 @@ function createMatchCard({ id, label, date, t1, t2, overallStatus }, extraClass 
 /** Shorten long team names for cards */
 function shorten(name) {
   if (!name) return '—';
-  const map = {
+  const esMap = {
     'Bosnia & Herzegovina': 'Bosnia',
     'Trinidad & Tobago': 'Trinidad',
     'Saudi Arabia': 'Arabia S.',
@@ -936,6 +942,21 @@ function shorten(name) {
     'DR Congo': 'R.D. Congo',
     'New Zealand': 'N. Zelanda',
   };
+  const enMap = {
+    'Bosnia & Herzegovina': 'Bosnia',
+    'Trinidad & Tobago': 'Trinidad',
+    'Saudi Arabia': 'Saudi A.',
+    'North Macedonia': 'N. Macedonia',
+    'South Africa': 'S. Africa',
+    'South Korea': 'S. Korea',
+    'Czech Republic': 'Czech Rep.',
+    'United States': 'USA',
+    'Papua New Guinea': 'PNG',
+    'Equatorial Guinea': 'Eq. Guinea',
+    'DR Congo': 'DR Congo',
+    'New Zealand': 'New Zealand',
+  };
+  const map = _lang === 'en' ? enMap : esMap;
   return map[name] || (name.length > 13 ? name.slice(0, 12) + '…' : name);
 }
 

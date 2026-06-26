@@ -1288,9 +1288,10 @@ function startCountdown(matches) {
   const tms  = document.getElementById('nextTeams');
 
   if (live.length > 0) {
-    const m = live[0];
     if (lbl) lbl.textContent = t('live_now');
-    if (tms) tms.textContent = `${m.team1} ${m.score1 ?? ''} - ${m.score2 ?? ''} ${m.team2}`;
+    if (tms) {
+      tms.textContent = live.map(m => `${m.team1} ${m.score1 ?? ''} - ${m.score2 ?? ''} ${m.team2}`).join('  |  ');
+    }
     if (_countdownInterval) clearInterval(_countdownInterval);
     document.getElementById('clkD').textContent = '--';
     document.getElementById('clkH').textContent = '--';

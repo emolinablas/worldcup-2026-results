@@ -81,6 +81,18 @@ const STRINGS = {
     winner_abbr: 'Gan.',
     loser_abbr: 'Perd.',
     third_place_medal: 'Tercer Lugar',
+    ai_announce_title: '🧠 ¡Nueva Función!',
+    ai_announce_body: 'Ahora puedes ver estadísticas comparativas y análisis táctico generado con Inteligencia Artificial. Busca el botón morado "🧠 Análisis IA" debajo de los partidos (disponible solo en partidos seleccionados).',
+    ai_announce_cta: 'Ver análisis de hoy →',
+    ai_announce_dismiss: 'Después',
+    ai_announce_features: 'Posesión · Precisión de pases · Tiros al arco · Fortalezas y Debilidades',
+    ai_stats_expected: '📊 Estadísticas Esperadas',
+    ai_stat_possession: 'Posesión',
+    ai_stat_passing: 'Precisión Pases',
+    ai_stat_shots: 'Tiros al Arco',
+    ai_tactical_report: '🤖 Reporte Táctico IA',
+    ai_strengths: '🟢 Fortalezas',
+    ai_weaknesses: '🔴 Debilidades',
   },
   en: {
     hdr_sub: 'Bracket · Live Tracker',
@@ -154,6 +166,18 @@ const STRINGS = {
     winner_abbr: 'Win.',
     loser_abbr: 'Los.',
     third_place_medal: 'Third Place',
+    ai_announce_title: '🧠 New Feature!',
+    ai_announce_body: 'Now you can see comparative statistics and AI-generated tactical analysis. Look for the purple "🧠 AI Analysis" button below the matches (available only on selected matches).',
+    ai_announce_cta: 'See today\'s analysis →',
+    ai_announce_dismiss: 'Later',
+    ai_announce_features: 'Possession · Pass Accuracy · Shots on Target · Strengths & Weaknesses',
+    ai_stats_expected: '📊 Expected Stats',
+    ai_stat_possession: 'Possession',
+    ai_stat_passing: 'Passing Accuracy',
+    ai_stat_shots: 'Shots on Target',
+    ai_tactical_report: '🤖 AI Tactical Report',
+    ai_strengths: '🟢 Strengths',
+    ai_weaknesses: '🔴 Weaknesses',
   },
 };
 
@@ -920,6 +944,19 @@ function createMatchCard({ id, label, date, t1, t2, overallStatus }, extraClass 
       <span class="mc-score ${w2 === 'winner' ? 'winner-score' : ''}">${played ? t2.score : '—'}</span>
     </div>`;
 
+  // Inject AI Analysis button if match is projected/confirmed and data exists
+  if ((overallStatus === 'projected' || overallStatus === 'confirmed') && t1.name && t2.name) {
+    const aiKey = `${t1.name}|${t2.name}`;
+    const aiKeyRev = `${t2.name}|${t1.name}`;
+    if (_aiData[aiKey] || _aiData[aiKeyRev]) {
+      const btn = document.createElement('button');
+      btn.className = 'ai-btn';
+      btn.innerHTML = '🧠 Análisis IA';
+      btn.onclick = () => openAiModal(t1, t2, _aiData[aiKey] || _aiData[aiKeyRev]);
+      card.appendChild(btn);
+    }
+  }
+
   return card;
 }
 
@@ -1352,8 +1389,152 @@ function setupTabs() {
 }
 
 // ============================================================
-// SECTION 13: AUTO REFRESH
+// SECTION 13: AI MODAL LOGIC
 // ============================================================
+
+function openAiModal(t1, t2, data) {
+  const modal = document.getElementById('aiModal');
+  if (!modal) return;
+
+  // Header
+  document.getElementById('aiName1').textContent = t1.name;
+  document.getElementById('aiName2').textContent = t2.name;
+  document.getElementById('aiFlag1').src = t1.flag;
+  document.getElementById('aiFlag2').src = t2.flag;
+
+  // Stats
+  const setStat = (id1, id2, barId, val1, val2, isPercent) => {
+    document.getElementById(id1).textContent = val1 + (isPercent ? '%' : '');
+    document.getElementById(id2).textContent = val2 + (isPercent ? '%' : '');
+    const total = val1 + val2;
+    const pct = total === 0 ? 50 : (val1 / total) * 100;
+    // reset animation
+    const bar = document.getElementById(barId);
+    bar.style.width = '50%';
+    setTimeout(() => { bar.style.width = pct + '%'; }, 100);
+  };
+
+  setStat('aiPoss1', 'aiPoss2', 'aiPossBar', data.stats.possession[0], data.stats.possession[1], true);
+  setStat('aiPass1', 'aiPass2', 'aiPassBar', data.stats.passing[0], data.stats.passing[1], true);
+  setStat('aiShot1', 'aiShot2', 'aiShotBar', data.stats.shots[0], data.stats.shots[1], false);
+
+  // AI Text
+  document.getElementById('aiStrength1').textContent = data.ai_analysis.t1_strength;
+  document.getElementById('aiWeak1').textContent = data.ai_analysis.t1_weakness;
+  document.getElementById('aiStrength2').textContent = data.ai_analysis.t2_strength;
+  document.getElementById('aiWeak2').textContent = data.ai_analysis.t2_weakness;
+  document.getElementById('aiSource').textContent = "Fuente: " + data.ai_analysis.source;
+
+  modal.classList.add('active');
+}
+
+document.getElementById('aiModalClose')?.addEventListener('click', () => {
+  document.getElementById('aiModal').classList.remove('active');
+});
+// Close on outside click
+document.getElementById('aiModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'aiModal') e.target.classList.remove('active');
+});
+
+/** Called from inline onclick in Today cards (HTML string context) */
+function openAiModalByKey(team1Name, team2Name) {
+  const key    = `${team1Name}|${team2Name}`;
+  const keyRev = `${team2Name}|${team1Name}`;
+
+  let data     = _aiData[key];
+  let reversed = false;
+  if (!data && _aiData[keyRev]) {
+    data     = _aiData[keyRev];
+    reversed = true;
+  }
+  if (!data) return;
+
+  const t1 = { name: team1Name, flag: getFlagUrl(team1Name) };
+  const t2 = { name: team2Name, flag: getFlagUrl(team2Name) };
+
+  // If the key was stored in reverse order, swap stats arrays and text so
+  // each team always sees its own numbers (possession[0] ↔ [1], etc.)
+  if (reversed) {
+    const d = data;
+    data = {
+      stats: {
+        possession: [d.stats.possession[1], d.stats.possession[0]],
+        passing:    [d.stats.passing[1],    d.stats.passing[0]],
+        shots:      [d.stats.shots[1],      d.stats.shots[0]],
+      },
+      ai_analysis: {
+        t1_strength: d.ai_analysis.t2_strength,
+        t1_weakness: d.ai_analysis.t2_weakness,
+        t2_strength: d.ai_analysis.t1_strength,
+        t2_weakness: d.ai_analysis.t1_weakness,
+        source:      d.ai_analysis.source,
+      },
+    };
+    if (d.ai_analysis_en) {
+      data.ai_analysis_en = {
+        t1_strength: d.ai_analysis_en.t2_strength,
+        t1_weakness: d.ai_analysis_en.t2_weakness,
+        t2_strength: d.ai_analysis_en.t1_strength,
+        t2_weakness: d.ai_analysis_en.t1_weakness,
+        source:      d.ai_analysis_en.source,
+      };
+    }
+  }
+
+  // Pick the right language analysis based on _lang
+  const analysisObj = (_lang === 'en' && data.ai_analysis_en) ? data.ai_analysis_en : data.ai_analysis;
+  const passedData = {
+    stats: data.stats,
+    ai_analysis: analysisObj
+  };
+
+  openAiModal(t1, t2, passedData);
+}
+
+// ============================================================
+// SECTION 14a: AI FEATURE ANNOUNCEMENT
+// ============================================================
+
+function setupAiAnnouncement() {
+  const KEY = 'wc26_ai_announced_date_v3';
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem(KEY) === today) return; // already shown today
+
+  const overlay = document.getElementById('aiAnnounceModal');
+  if (!overlay) return;
+
+  // Populate translations
+  overlay.querySelector('#aiAnnTitle').textContent   = t('ai_announce_title');
+  overlay.querySelector('#aiAnnBody').textContent    = t('ai_announce_body');
+  overlay.querySelector('#aiAnnFeats').textContent   = t('ai_announce_features');
+  overlay.querySelector('#aiAnnCta').textContent     = t('ai_announce_cta');
+  overlay.querySelector('#aiAnnDismiss').textContent = t('ai_announce_dismiss');
+
+  // CTA → switch to Today tab and close
+  overlay.querySelector('#aiAnnCta').onclick = () => {
+    const todayTab = document.getElementById('tabToday');
+    if (todayTab) todayTab.click();
+    overlay.classList.remove('active');
+    localStorage.setItem(KEY, today);
+  };
+
+  // Dismiss
+  overlay.querySelector('#aiAnnDismiss').onclick = () => {
+    overlay.classList.remove('active');
+    localStorage.setItem(KEY, today);
+  };
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+      localStorage.setItem(KEY, today);
+    }
+  });
+
+  // Show after a short delay so the page loads first
+  setTimeout(() => overlay.classList.add('active'), 1800);
+}
+
+
 
 let _refreshTimer = null;
 
@@ -1378,9 +1559,18 @@ function setupRefreshBtn() {
 // ============================================================
 
 let _allMatches = [];
+let _aiData = {};
 
 async function loadAndRender() {
   try {
+    // Attempt to load analysis.json silently
+    try {
+      const aiRes = await fetch('analysis.json');
+      if (aiRes.ok) _aiData = await aiRes.json();
+    } catch (e) {
+      console.warn('analysis.json no disponible');
+    }
+
     const matches = await fetchData();
     _allMatches = matches;
 
@@ -1702,36 +1892,109 @@ function renderToday(matches) {
     const f1 = getFlagUrl(m.team1);
     const f2 = getFlagUrl(m.team2);
 
+    // (cards will be rendered by buildCard below)
+    return m;
+  });
+
+
+  // ── Helper: build card HTML for a match (reused for today AND tomorrow) ──
+  const buildCard = (m) => {
+    const utcDate = parseMatchDateTime(m.date, m.time);
+    let timeDisplay = '', timeSubDisplay = '';
+    if (utcDate) {
+      timeDisplay = utcDate.toLocaleTimeString(_lang === 'en' ? 'en-US' : 'es-MX', {
+        hour: '2-digit', minute: '2-digit', timeZone: userTZ
+      });
+      timeSubDisplay = tzLabel;
+    }
+    const isLive     = m.status === 'live';
+    const isFinished = m.status === 'finished';
+    let statusHTML = '';
+    if (isLive)       statusHTML = `<span class="td-status td-live">${t('match_status_live')}</span>`;
+    else if(isFinished) statusHTML = `<span class="td-status td-final">${t('match_status_final')}</span>`;
+    else              statusHTML = `<span class="td-status td-upcoming">${timeDisplay}</span>`;
+
+    const groupBadge = m.group ? `<span class="td-group">${t('group_prefix')} ${m.group}</span>` : '';
+    const venueTxt   = m.ground ? `<span class="td-venue">📍 ${m.ground}</span>` : '';
+    const score1 = (isLive || isFinished) && m.score1 != null ? m.score1 : '';
+    const score2 = (isLive || isFinished) && m.score2 != null ? m.score2 : '';
+    const showScore = score1 !== '' || score2 !== '';
+    const scoreHTML = showScore
+      ? `<div class="td-score ${isLive ? 'td-score-live' : ''}">${score1} <span>-</span> ${score2}</div>`
+      : `<div class="td-score td-score-vs">VS</div>`;
+    const f1 = getFlagUrl(m.team1);
+    const f2 = getFlagUrl(m.team2);
+    const aiKey    = `${m.team1}|${m.team2}`;
+    const aiKeyRev = `${m.team2}|${m.team1}`;
+    const hasAi    = _aiData[aiKey] || _aiData[aiKeyRev];
+    const aiBtn    = hasAi && !isFinished
+      ? `<button class="ai-btn" onclick="openAiModalByKey('${m.team1}','${m.team2}')">🧠 Análisis IA</button>`
+      : '';
     return `
-      <div class="td-card ${isLive ? 'td-card-live' : isFinished ? 'td-card-done' : ''}">
-        <div class="td-card-top">
-          ${statusHTML}
-          <div class="td-meta">${groupBadge}${venueTxt}</div>
-        </div>
+      <div class="td-card ${isLive?'td-card-live':isFinished?'td-card-done':''}${hasAi&&!isFinished?' td-card-has-ai':''}">
+        <div class="td-card-top">${statusHTML}<div class="td-meta">${groupBadge}${venueTxt}</div></div>
         <div class="td-matchup">
           <div class="td-team">
-            ${f1 ? `<img class="td-flag" src="${f1}" alt="${m.team1}" onerror="this.style.display='none'">` : ''}
+            ${f1?`<img class="td-flag" src="${f1}" alt="${m.team1}" onerror="this.style.display='none'">`:''}
             <span class="td-name">${m.team1}</span>
           </div>
           ${scoreHTML}
           <div class="td-team td-team-right">
             <span class="td-name">${m.team2}</span>
-            ${f2 ? `<img class="td-flag" src="${f2}" alt="${m.team2}" onerror="this.style.display='none'">` : ''}
+            ${f2?`<img class="td-flag" src="${f2}" alt="${m.team2}" onerror="this.style.display='none'">`:''}
           </div>
         </div>
-        ${isLive || !showScore ? '' : `<div class="td-time-row">🕐 ${timeDisplay} <span class="td-tz">${timeSubDisplay}</span></div>`}
-      </div>
-    `;
-  }).join('');
+        ${isLive||!showScore?'':`<div class="td-time-row">🕐 ${timeDisplay} <span class="td-tz">${timeSubDisplay}</span></div>`}
+        ${aiBtn}
+      </div>`;
+  };
+
+  // ── Tomorrow's matches ──
+  const tomorrowDate = new Date(nowLocal);
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const tomorrowStr = [
+    tomorrowDate.getFullYear(),
+    String(tomorrowDate.getMonth() + 1).padStart(2, '0'),
+    String(tomorrowDate.getDate()).padStart(2, '0'),
+  ].join('-');
+
+  const tomorrowMatches = matches.filter(m => {
+    if (!m.date) return false;
+    if (m.time) {
+      const utc = parseMatchDateTime(m.date, m.time);
+      if (utc) {
+        const localDateStr = utc.toLocaleDateString('en-CA', { timeZone: userTZ });
+        return localDateStr === tomorrowStr;
+      }
+    }
+    return m.date === tomorrowStr;
+  }).sort((a, b) => {
+    const ta = parseMatchDateTime(a.date, a.time);
+    const tb = parseMatchDateTime(b.date, b.time);
+    if (!ta) return 1; if (!tb) return -1;
+    return ta - tb;
+  });
+
+  const tomorrowLabel = _lang === 'en' ? 'Tomorrow' : 'Mañana';
+  const tomorrowSection = tomorrowMatches.length > 0 ? `
+    <div class="td-section-divider">
+      <span>📅 ${tomorrowLabel}</span>
+    </div>
+    <div class="td-grid">${tomorrowMatches.map(buildCard).join('')}</div>
+  ` : '';
+
+  const todayCards = todayMatches.map(buildCard).join('');
 
   wrap.innerHTML = `
     <div class="today-header">
       <h2>${t('today_heading')}</h2>
       <p class="today-subtitle">${t('today_subtitle')} · <strong>${tzLabel}</strong></p>
     </div>
-    <div class="td-grid">${cards}</div>
+    <div class="td-grid">${todayCards}</div>
+    ${tomorrowSection}
   `;
 }
+
 
 function updateTodayTabBadge(matches) {
   const tab = document.getElementById('tabToday');
@@ -1756,6 +2019,7 @@ function init() {
   setupLang();
   setupTutorial();
   setupKofi();
+  setupAiAnnouncement();
   setupTabs();
   setupRefreshBtn();
   loadAndRender();

@@ -206,6 +206,98 @@
 
   </main>
 
+  <!-- AI ANALYSIS MODAL -->
+  <div id="aiModal" class="ai-modal-overlay">
+    <div class="ai-modal">
+      <button class="ai-modal-close" id="aiModalClose">✕</button>
+      <div class="ai-modal-hdr" id="aiModalHdr">
+        <div class="ai-team">
+          <img id="aiFlag1" src="" alt="">
+          <span id="aiName1">Team 1</span>
+        </div>
+        <div class="ai-vs">VS</div>
+        <div class="ai-team">
+          <span id="aiName2">Team 2</span>
+          <img id="aiFlag2" src="" alt="">
+        </div>
+      </div>
+      
+      <div class="ai-modal-body">
+        <h3 class="ai-section-title" data-i18n="ai_stats_expected">📊 Estadísticas Esperadas</h3>
+        
+        <!-- Possession -->
+        <div class="ai-stat-row">
+          <div class="ai-stat-labels">
+            <span id="aiPoss1">0%</span>
+            <span class="ai-stat-name" data-i18n="ai_stat_possession">Posesión</span>
+            <span id="aiPoss2">0%</span>
+          </div>
+          <div class="ai-bar-wrap">
+            <div class="ai-bar-fill" id="aiPossBar" style="width: 50%;"></div>
+          </div>
+        </div>
+        
+        <!-- Passing -->
+        <div class="ai-stat-row">
+          <div class="ai-stat-labels">
+            <span id="aiPass1">0%</span>
+            <span class="ai-stat-name" data-i18n="ai_stat_passing">Precisión Pases</span>
+            <span id="aiPass2">0%</span>
+          </div>
+          <div class="ai-bar-wrap">
+            <div class="ai-bar-fill" id="aiPassBar" style="width: 50%;"></div>
+          </div>
+        </div>
+        
+        <!-- Shots -->
+        <div class="ai-stat-row">
+          <div class="ai-stat-labels">
+            <span id="aiShot1">0</span>
+            <span class="ai-stat-name" data-i18n="ai_stat_shots">Tiros al Arco</span>
+            <span id="aiShot2">0</span>
+          </div>
+          <div class="ai-bar-wrap">
+            <div class="ai-bar-fill" id="aiShotBar" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <h3 class="ai-section-title" style="margin-top: 1.5rem;" data-i18n="ai_tactical_report">🤖 Reporte Táctico IA</h3>
+        
+        <div class="ai-tactical-grid">
+          <div class="ai-tactical-card">
+            <h4 data-i18n="ai_strengths">🟢 Fortalezas</h4>
+            <p id="aiStrength1" class="ai-txt-t1"></p>
+            <p id="aiStrength2" class="ai-txt-t2"></p>
+          </div>
+          <div class="ai-tactical-card">
+            <h4 data-i18n="ai_weaknesses">🔴 Debilidades</h4>
+            <p id="aiWeak1" class="ai-txt-t1"></p>
+            <p id="aiWeak2" class="ai-txt-t2"></p>
+          </div>
+        </div>
+        
+        <div class="ai-source" id="aiSource">Fuente: -</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI FEATURE ANNOUNCEMENT MODAL -->
+  <div id="aiAnnounceModal" class="ai-announce-overlay">
+    <div class="ai-announce-box">
+      <div class="ai-announce-icon">🧠</div>
+      <h2 id="aiAnnTitle"></h2>
+      <p id="aiAnnBody"></p>
+      <div class="ai-announce-chips">
+        <span>📊</span>
+        <span id="aiAnnFeats"></span>
+      </div>
+      <div class="ai-announce-actions">
+        <button id="aiAnnCta" class="ai-ann-cta"></button>
+        <button id="aiAnnDismiss" class="ai-ann-dismiss"></button>
+      </div>
+    </div>
+  </div>
+
   <footer style="text-align: center; padding: 1rem; font-size: 0.75rem; color: var(--t3); margin-top: 1rem;">
     <span data-i18n="footer">Desarrollado con por Ever Molina</span>
   </footer>

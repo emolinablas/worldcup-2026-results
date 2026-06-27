@@ -244,54 +244,60 @@ const COL_X = {
 };
 
 /** Round of 32 — structure & team slots (FIFA 2026 official regulations) */
+// Source: 2026 FIFA World Cup Regulations (digitalhub.fifa.com) via Wikipedia
+// Visual slot order matches FotMob / official bracket layout.
 const R32_MATCHES = [
-  // ── LEFT SIDE ──────────────────────────────────────────────────────────────
-  // M73: Winner A vs Winner B (Foxborough, Jun 29)
-  { id: 'M73', col: 'R32L', slotY: 0, team1: { type: '1st', group: 'A' }, team2: { type: '1st', group: 'B' } },
-  // M74: Winner E vs 3rd (A/B/C/D/F) (East Rutherford, Jun 30)
-  { id: 'M74', col: 'R32L', slotY: 1, team1: { type: '1st', group: 'E' }, team2: { type: '3rd', eligible: ['A','B','C','D','F'] } },
-  // M75: Runner-up A vs Runner-up B (Inglewood, Jun 28)
-  { id: 'M75', col: 'R32L', slotY: 2, team1: { type: '2nd', group: 'A' }, team2: { type: '2nd', group: 'B' } },
-  // M76: Winner F vs Runner-up E (Guadalupe, Jun 29)
-  { id: 'M76', col: 'R32L', slotY: 3, team1: { type: '1st', group: 'F' }, team2: { type: '2nd', group: 'E' } },
-  // M77: Runner-up K vs Runner-up L (Toronto, Jul 2)
-  { id: 'M77', col: 'R32L', slotY: 4, team1: { type: '2nd', group: 'K' }, team2: { type: '2nd', group: 'L' } },
-  // M78: Winner H vs Runner-up J (Inglewood, Jul 2)
-  { id: 'M78', col: 'R32L', slotY: 5, team1: { type: '1st', group: 'H' }, team2: { type: '2nd', group: 'J' } },
-  // M79: Winner C vs Runner-up D (Santa Clara, Jul 1)
-  { id: 'M79', col: 'R32L', slotY: 6, team1: { type: '1st', group: 'C' }, team2: { type: '2nd', group: 'D' } },
-  // M80: Winner G vs 3rd (A/I/J) (Seattle, Jul 1)
-  { id: 'M80', col: 'R32L', slotY: 7, team1: { type: '1st', group: 'G' }, team2: { type: '3rd', eligible: ['A','I','J'] } },
-  // ── RIGHT SIDE ─────────────────────────────────────────────────────────────
-  // M81: Winner D vs Runner-up C (Houston, Jun 29)
-  { id: 'M81', col: 'R32R', slotY: 0, team1: { type: '1st', group: 'D' }, team2: { type: '2nd', group: 'C' } },
-  // M82: Winner I vs Runner-up F (Arlington, Jun 30)
-  { id: 'M82', col: 'R32R', slotY: 1, team1: { type: '1st', group: 'I' }, team2: { type: '2nd', group: 'F' } },
-  // M83: Winner A vs 3rd (C/E) (Mexico City, Jun 30)
-  { id: 'M83', col: 'R32R', slotY: 2, team1: { type: '1st', group: 'A' }, team2: { type: '3rd', eligible: ['C','E'] } },
-  // M84: Winner L vs 3rd (I/J/K) (Atlanta, Jul 1)
-  { id: 'M84', col: 'R32R', slotY: 3, team1: { type: '1st', group: 'L' }, team2: { type: '3rd', eligible: ['I','J','K'] } },
-  // M85: Winner J vs Runner-up I (Miami, Jul 3)
-  { id: 'M85', col: 'R32R', slotY: 4, team1: { type: '1st', group: 'J' }, team2: { type: '2nd', group: 'I' } },
-  // M86: Winner B vs Runner-up A (Arlington, Jul 3)
-  { id: 'M86', col: 'R32R', slotY: 5, team1: { type: '1st', group: 'B' }, team2: { type: '2nd', group: 'G' } },
-  // M87: Winner K vs 3rd (G/J) (Vancouver, Jul 2)
-  { id: 'M87', col: 'R32R', slotY: 6, team1: { type: '2nd', group: 'H' }, team2: { type: '3rd', eligible: ['G','J'] } },
-  // M88: Winner K vs 3rd (E/I/L) (Kansas City, Jul 3)
-  { id: 'M88', col: 'R32R', slotY: 7, team1: { type: '1st', group: 'K' }, team2: { type: '3rd', eligible: ['E','I','L'] } },
+  // ── LEFT SIDE (top → bottom) ───────────────────────────────────────────
+  // M74 (East Rutherford, Jun 30): Winner E vs 3rd A/B/C/D/F → GER vs PAR
+  { id: 'M74', col: 'R32L', slotY: 0, team1: { type: '1st', group: 'E' }, team2: { type: '3rd', eligible: ['A','B','C','D','F'] } },
+  // M77 (Houston, Jun 29):  Winner I vs 3rd C/D/F/G/H → FRA vs SWE
+  { id: 'M77', col: 'R32L', slotY: 1, team1: { type: '1st', group: 'I' }, team2: { type: '3rd', eligible: ['C','D','F','G','H'] } },
+  // M73 (Inglewood, Jun 28): Ru-A vs Ru-B → RSA vs CAN
+  { id: 'M73', col: 'R32L', slotY: 2, team1: { type: '2nd', group: 'A' }, team2: { type: '2nd', group: 'B' } },
+  // M75 (Guadalupe, Jun 29): Winner F vs Ru-C → NED vs MAR
+  { id: 'M75', col: 'R32L', slotY: 3, team1: { type: '1st', group: 'F' }, team2: { type: '2nd', group: 'C' } },
+  // M83 (Toronto, Jul 2): Ru-K vs Ru-L
+  { id: 'M83', col: 'R32L', slotY: 4, team1: { type: '2nd', group: 'K' }, team2: { type: '2nd', group: 'L' } },
+  // M84 (Inglewood, Jul 2): Winner H vs Ru-J → ESP vs Ru-J
+  { id: 'M84', col: 'R32L', slotY: 5, team1: { type: '1st', group: 'H' }, team2: { type: '2nd', group: 'J' } },
+  // M81 (Santa Clara, Jul 1): Winner D vs 3rd B/E/F/I/J → USA vs BIH
+  { id: 'M81', col: 'R32L', slotY: 6, team1: { type: '1st', group: 'D' }, team2: { type: '3rd', eligible: ['B','E','F','I','J'] } },
+  // M82 (Seattle, Jul 1): Winner G vs 3rd A/E/H/I/J → BEL vs KOR
+  { id: 'M82', col: 'R32L', slotY: 7, team1: { type: '1st', group: 'G' }, team2: { type: '3rd', eligible: ['A','E','H','I','J'] } },
+  // ── RIGHT SIDE (top → bottom) ───────────────────────────────────────────
+  // M76 (Houston, Jun 29): Winner C vs Ru-F → BRA vs JPN
+  { id: 'M76', col: 'R32R', slotY: 0, team1: { type: '1st', group: 'C' }, team2: { type: '2nd', group: 'F' } },
+  // M78 (Arlington, Jun 30): Ru-E vs Ru-I → CIV vs NOR
+  { id: 'M78', col: 'R32R', slotY: 1, team1: { type: '2nd', group: 'E' }, team2: { type: '2nd', group: 'I' } },
+  // M79 (Mexico City, Jun 30): Winner A vs 3rd C/E/F/H/I → MEX vs ECU
+  { id: 'M79', col: 'R32R', slotY: 2, team1: { type: '1st', group: 'A' }, team2: { type: '3rd', eligible: ['C','E','F','H','I'] } },
+  // M80 (Atlanta, Jul 1): Winner L vs 3rd E/H/I/J/K → Wn-L vs 3rd
+  { id: 'M80', col: 'R32R', slotY: 3, team1: { type: '1st', group: 'L' }, team2: { type: '3rd', eligible: ['E','H','I','J','K'] } },
+  // M86 (Miami, Jul 3): Winner J vs Ru-H → ARG vs CPV
+  { id: 'M86', col: 'R32R', slotY: 4, team1: { type: '1st', group: 'J' }, team2: { type: '2nd', group: 'H' } },
+  // M88 (Arlington, Jul 3): Ru-D vs Ru-G → AUS vs EGY
+  { id: 'M88', col: 'R32R', slotY: 5, team1: { type: '2nd', group: 'D' }, team2: { type: '2nd', group: 'G' } },
+  // M85 (Vancouver, Jul 2): Winner B vs 3rd E/F/G/I/J → SUI vs IRN
+  { id: 'M85', col: 'R32R', slotY: 6, team1: { type: '1st', group: 'B' }, team2: { type: '3rd', eligible: ['E','F','G','I','J'] } },
+  // M87 (Kansas City, Jul 3): Winner K vs 3rd D/E/I/J/L → Wn-K vs 3rd
+  { id: 'M87', col: 'R32R', slotY: 7, team1: { type: '1st', group: 'K' }, team2: { type: '3rd', eligible: ['D','E','I','J','L'] } },
 ];
 
-
 /** Bracket tree: which R32 pairs feed into R16, then QF, SF, Final */
+// R16 pairings from FIFA schedule (Wikipedia):
+// R16-A(Jul 4): M74 vs M77 | R16-B(Jul 4): M73 vs M75
+// R16-C(Jul 6): M83 vs M84 | R16-D(Jul 6): M81 vs M82
+// R16-E(Jul 5): M76 vs M78 | R16-F(Jul 5): M79 vs M80
+// R16-G(Jul 7): M86 vs M88 | R16-H(Jul 7): M85 vs M87
 const BRACKET_TREE = {
-  'R16-1': { from: ['M73','M74'], col: 'R16L', slotY: 0.5 },
-  'R16-2': { from: ['M75','M76'], col: 'R16L', slotY: 2.5 },
-  'R16-3': { from: ['M77','M78'], col: 'R16L', slotY: 4.5 },
-  'R16-4': { from: ['M79','M80'], col: 'R16L', slotY: 6.5 },
-  'R16-5': { from: ['M81','M82'], col: 'R16R', slotY: 0.5 },
-  'R16-6': { from: ['M83','M84'], col: 'R16R', slotY: 2.5 },
-  'R16-7': { from: ['M85','M86'], col: 'R16R', slotY: 4.5 },
-  'R16-8': { from: ['M87','M88'], col: 'R16R', slotY: 6.5 },
+  'R16-1': { from: ['M74','M77'], col: 'R16L', slotY: 0.5 },
+  'R16-2': { from: ['M73','M75'], col: 'R16L', slotY: 2.5 },
+  'R16-3': { from: ['M83','M84'], col: 'R16L', slotY: 4.5 },
+  'R16-4': { from: ['M81','M82'], col: 'R16L', slotY: 6.5 },
+  'R16-5': { from: ['M76','M78'], col: 'R16R', slotY: 0.5 },
+  'R16-6': { from: ['M79','M80'], col: 'R16R', slotY: 2.5 },
+  'R16-7': { from: ['M86','M88'], col: 'R16R', slotY: 4.5 },
+  'R16-8': { from: ['M85','M87'], col: 'R16R', slotY: 6.5 },
   'QF1':   { from: ['R16-1','R16-2'], col: 'QFL', slotY: 1.5 },
   'QF2':   { from: ['R16-3','R16-4'], col: 'QFL', slotY: 5.5 },
   'QF3':   { from: ['R16-5','R16-6'], col: 'QFR', slotY: 1.5 },
@@ -302,15 +308,18 @@ const BRACKET_TREE = {
   '3RD':   { from: ['SF1','SF2'],     col: 'FIN', slotY: 5.5, isThirdPlace: true },
 };
 
-/** Third-place slots and their eligible group letters (Annex C FIFA 2026 official regulations) */
+/** Third-place slots and their eligible group letters (Annex C FIFA 2026 official) */
 const THIRD_SLOTS = {
   'M74': ['A','B','C','D','F'],
-  'M80': ['A','I','J'],
-  'M83': ['C','E'],
-  'M84': ['I','J','K'],
-  'M87': ['G','J'],
-  'M88': ['E','I','L'],
+  'M77': ['C','D','F','G','H'],
+  'M79': ['C','E','F','H','I'],
+  'M80': ['E','H','I','J','K'],
+  'M81': ['B','E','F','I','J'],
+  'M82': ['A','E','H','I','J'],
+  'M85': ['E','F','G','I','J'],
+  'M87': ['D','E','I','J','L'],
 };
+
 
 /** ISO 3166-1 alpha-2 flag codes for team names */
 const FLAGS = {

@@ -178,5 +178,35 @@
       "t2_weakness": "Having already secured qualification, the possible rotation of starters discussed by analysts could reduce their fluidity and offensive punch in the early minutes.",
       "source": "Google Sports Data · AS USA · FotMob · YouTube (@lapizarradelprofe) · YouTube (Pedro el Ingeniero)"
     }
+  },
+  "Panama|England": {
+    "stats": {
+      "possession": [
+        35,
+        65
+      ],
+      "passing": [
+        84,
+        89
+      ],
+      "shots": [
+        6,
+        14
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "Panamá ha mostrado una notable disciplina defensiva inicial, alcanzando el mediotiempo sin conceder goles en sus partidos frente a Croacia y Ghana. Su orden táctico les permite mantenerse competitivos, cediendo derrotas solo por la mínima diferencia.",
+      "t1_weakness": "Con un promedio estimado de apenas 6 tiros por partido (11 intentos totales reportados), sufren de una alarmante inoperancia ofensiva. Esta dificultad para generar peligro se agrava por la ausencia por lesión de su principal creador, Adalberto Carrasquilla.",
+      "t2_strength": "Inglaterra impone un control absoluto del juego mediante la posesión del balón, habiendo registrado un abrumador récord de 78.8% en su último duelo. Esta tenencia les permite dictar el ritmo del partido y asfixiar al rival en su propio campo.",
+      "t2_weakness": "A pesar de dominar estadísticamente, muestran serias dificultades para penetrar defensas muy replegadas en bloque bajo. Su reciente empate sin goles ante Ghana evidenció que la alta posesión no siempre se traduce en fluidez ni en eficacia frente al arco.",
+      "source": "Concacaf.com (26 Jun 2026) · The Guardian (23-24 Jun 2026) · FIFA.com (26 Jun 2026) · No se encontraron videos específicos de @PedroElIngeniero ni @lapizarradelprofe en los últimos 5 días · *Nota: Estadísticas de posesión y pases generales estimadas a partir de promedios parciales de los reportes oficiales."
+    },
+    "ai_analysis_en": {
+      "t1_strength": "Panama has shown remarkable initial defensive discipline, reaching halftime without conceding goals in their matches against Croatia and Ghana. Their tactical order allows them to stay competitive, conceding only narrow defeats.",
+      "t1_weakness": "With an estimated average of just 6 shots per match (11 total attempts reported), they suffer from an alarming offensive ineffectiveness. This difficulty in generating danger is compounded by the injury absence of their main playmaker, Adalberto Carrasquilla.",
+      "t2_strength": "England imposes absolute control of the game through ball possession, having registered an overwhelming record of 78.8% in their last duel. This possession allows them to dictate the pace of the match and suffocate the opponent in their own half.",
+      "t2_weakness": "Despite dominating statistically, they show serious difficulties in penetrating defenses that sit deep in a low block. Their recent goalless draw against Ghana proved that high possession does not always translate into fluidity or effectiveness in front of goal.",
+      "source": "Concacaf.com (26 Jun 2026) · The Guardian (23-24 Jun 2026) · FIFA.com (26 Jun 2026) · No specific videos found from @PedroElIngeniero or @lapizarradelprofe in the last 5 days · *Note: Overall possession and passing stats estimated from partial averages of official reports."
+    }
   }
 }

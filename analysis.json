@@ -148,5 +148,35 @@
       "t2_weakness": "They have failed to be clinical in front of goal, which has cost them consecutive draws (against Egypt and Iran) in this group stage.",
       "source": "Google Sports Data · Sports Illustrated · (Stats estimated due to lack of official metrics; no recent videos found on requested YouTube channels)"
     }
+  },
+  "Jordan|Argentina": {
+    "stats": {
+      "possession": [
+        34,
+        66
+      ],
+      "passing": [
+        78,
+        89
+      ],
+      "shots": [
+        3,
+        7
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "Jordania aprovecha sus limitadas oportunidades; a pesar de una baja posesión estimada en 34% (basada en sus 291 pases por juego), han logrado anotar en sus dos encuentros.",
+      "t1_weakness": "Su bloque defensivo es vulnerable, promediando 2.5 goles concedidos y permitiendo 14 tiros totales de sus rivales por partido según datos recientes.",
+      "t2_strength": "Argentina exhibe un control absoluto con un estimado de 66% de posesión y 558 pases por partido, manteniendo su arco invicto en el torneo gracias a su solidez y presión.",
+      "t2_weakness": "Al tener la clasificación asegurada, la posible rotación de titulares discutida por analistas podría restarles fluidez y contundencia ofensiva en los primeros minutos.",
+      "source": "Google Sports Data · AS USA · FotMob · YouTube (@lapizarradelprofe) · YouTube (Pedro el Ingeniero)"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "Jordan takes advantage of their limited opportunities; despite an estimated low possession of 34% (based on their 291 passes per game), they have managed to score in both of their matches.",
+      "t1_weakness": "Their defensive block is vulnerable, conceding an average of 2.5 goals and allowing 14 total opponent shots per match according to recent data.",
+      "t2_strength": "Argentina exhibits absolute control with an estimated 66% possession and 558 passes per match, keeping a clean sheet in the tournament thanks to their solidity and pressing.",
+      "t2_weakness": "Having already secured qualification, the possible rotation of starters discussed by analysts could reduce their fluidity and offensive punch in the early minutes.",
+      "source": "Google Sports Data · AS USA · FotMob · YouTube (@lapizarradelprofe) · YouTube (Pedro el Ingeniero)"
+    }
   }
 }

@@ -944,15 +944,16 @@ function createMatchCard({ id, label, date, t1, t2, overallStatus }, extraClass 
       <span class="mc-score ${w2 === 'winner' ? 'winner-score' : ''}">${played ? t2.score : '—'}</span>
     </div>`;
 
-  // Inject AI Analysis button if match is projected/confirmed and data exists
-  if ((overallStatus === 'projected' || overallStatus === 'confirmed') && t1.name && t2.name) {
+  // Inject AI Analysis button if data exists and teams are known
+  if (t1.name && t2.name && t1.name !== 'TBD' && t2.name !== 'TBD') {
     const aiKey = `${t1.name}|${t2.name}`;
     const aiKeyRev = `${t2.name}|${t1.name}`;
     if (_aiData[aiKey] || _aiData[aiKeyRev]) {
       const btn = document.createElement('button');
       btn.className = 'ai-btn';
       btn.innerHTML = '🧠 Análisis IA';
-      btn.onclick = () => openAiModal(t1, t2, _aiData[aiKey] || _aiData[aiKeyRev]);
+      // In bracket cards, we directly pass data. For keys that might be reversed, openAiModalByKey handles swapping.
+      btn.onclick = () => openAiModalByKey(t1.name, t2.name);
       card.appendChild(btn);
     }
   }
@@ -1927,11 +1928,11 @@ function renderToday(matches) {
     const aiKey    = `${m.team1}|${m.team2}`;
     const aiKeyRev = `${m.team2}|${m.team1}`;
     const hasAi    = _aiData[aiKey] || _aiData[aiKeyRev];
-    const aiBtn    = hasAi && !isFinished
+    const aiBtn    = hasAi
       ? `<button class="ai-btn" onclick="openAiModalByKey('${m.team1}','${m.team2}')">🧠 Análisis IA</button>`
       : '';
     return `
-      <div class="td-card ${isLive?'td-card-live':isFinished?'td-card-done':''}${hasAi&&!isFinished?' td-card-has-ai':''}">
+      <div class="td-card ${isLive?'td-card-live':isFinished?'td-card-done':''}${hasAi?' td-card-has-ai':''}">
         <div class="td-card-top">${statusHTML}<div class="td-meta">${groupBadge}${venueTxt}</div></div>
         <div class="td-matchup">
           <div class="td-team">

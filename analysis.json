@@ -88,5 +88,35 @@
       "t2_weakness": "Their high defensive line constantly exposes them to direct counterattacks and long balls behind their center-backs.",
       "source": "Estimated data due to real-time web search restrictions · FIFA.com (Historical tactical trends) · FBref (Performance profiles)"
     }
+  },
+  "Egypt|Iran": {
+    "stats": {
+      "possession": [
+        52,
+        48
+      ],
+      "passing": [
+        82,
+        79
+      ],
+      "shots": [
+        5,
+        3
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "Egipto ha mostrado una transición ofensiva letal, capitalizando espacios con jugadores rápidos y logrando 4 goles en sus primeros dos encuentros del Grupo G.",
+      "t1_weakness": "Suelen ceder protagonismo ante equipos físicos y pueden carecer de fluidez si el rival implementa un bloque bajo muy cerca de su propia área.",
+      "t2_strength": "Irán posee un bloque defensivo sumamente rocoso y disciplinado, capaz de anular a ofensivas élite como lo demostró en su reciente empate 0-0 frente a Bélgica.",
+      "t2_weakness": "Tienen serias dificultades en la creación de juego proactivo, lo que limita drásticamente sus oportunidades de gol a jugadas aisladas o a balón parado.",
+      "source": "Google Sports Data (Resultados 2026) · Goal.com (Previas 2026) · Squawka"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "Egypt has shown a lethal offensive transition, capitalizing on spaces with fast players and scoring 4 goals in their first two Group G matches.",
+      "t1_weakness": "They tend to yield the initiative against physical teams and may lack fluidity if the opponent implements a low block very close to their own area.",
+      "t2_strength": "Iran possesses an extremely rock-solid and disciplined defensive block, capable of nullifying elite offenses as demonstrated in their recent 0-0 draw against Belgium.",
+      "t2_weakness": "They have serious difficulties in proactive playmaking, drastically limiting their scoring opportunities to isolated plays or set pieces.",
+      "source": "Google Sports Data (2026 Results) · Goal.com (2026 Previews) · Squawka"
+    }
   }
 }

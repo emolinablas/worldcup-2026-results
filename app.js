@@ -81,9 +81,9 @@ const STRINGS = {
     winner_abbr: 'Gan.',
     loser_abbr: 'Perd.',
     third_place_medal: 'Tercer Lugar',
-    ai_announce_title: '🧠 ¡Nueva Función!',
-    ai_announce_body: 'Ahora puedes ver estadísticas comparativas y análisis táctico generado con Inteligencia Artificial. Busca el botón morado "🧠 Análisis IA" debajo de los partidos (disponible solo en partidos seleccionados).',
-    ai_announce_cta: 'Ver análisis de hoy →',
+    ai_announce_title: '🧠 ¡Análisis Disponible!',
+    ai_announce_body: 'Ya tenemos listo el análisis táctico con Inteligencia Artificial para el partido de Colombia vs Portugal. Busca el botón morado "🧠 Análisis IA" debajo del partido.',
+    ai_announce_cta: 'Ver partido →',
     ai_announce_dismiss: 'Después',
     ai_announce_features: 'Posesión · Precisión de pases · Tiros al arco · Fortalezas y Debilidades',
     ai_stats_expected: '📊 Estadísticas Esperadas',
@@ -166,9 +166,9 @@ const STRINGS = {
     winner_abbr: 'Win.',
     loser_abbr: 'Los.',
     third_place_medal: 'Third Place',
-    ai_announce_title: '🧠 New Feature!',
-    ai_announce_body: 'Now you can see comparative statistics and AI-generated tactical analysis. Look for the purple "🧠 AI Analysis" button below the matches (available only on selected matches).',
-    ai_announce_cta: 'See today\'s analysis →',
+    ai_announce_title: '🧠 Analysis Available!',
+    ai_announce_body: 'We have the AI tactical analysis ready for the Colombia vs Portugal match. Look for the purple "🧠 AI Analysis" button below the match.',
+    ai_announce_cta: 'View match →',
     ai_announce_dismiss: 'Later',
     ai_announce_features: 'Possession · Pass Accuracy · Shots on Target · Strengths & Weaknesses',
     ai_stats_expected: '📊 Expected Stats',
@@ -1496,7 +1496,7 @@ function openAiModalByKey(team1Name, team2Name) {
 // ============================================================
 
 function setupAiAnnouncement() {
-  const KEY = 'wc26_ai_announced_date_v3';
+  const KEY = 'wc26_ai_announced_date_v4';
   const today = new Date().toISOString().slice(0, 10);
   if (localStorage.getItem(KEY) === today) return; // already shown today
 

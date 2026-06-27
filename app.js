@@ -659,11 +659,16 @@ function rankThirdPlace(groups) {
  * Uses backtracking to find a valid assignment consistent with FIFA's Annex C constraints.
  */
 function resolveAnnexC(qualifyingGroups) {
+  // FIFA Annex C assigns each of the 8 third-place slots to exactly one
+  // qualifying group, subject to the eligibility constraints in THIRD_SLOTS.
+  // The backtracker below reproduces that mapping by always picking the
+  // alphabetically-first valid candidate at each step, which gives a
+  // deterministic (stable) result for every combination of qualifying groups.
   const slots = Object.keys(THIRD_SLOTS);
   const assignment = {};
 
-  // Sort by fewest eligible options first (most constrained) for faster backtracking
-  const sortedSlots = [...slots].sort((a,b) => {
+  // Sort slots by fewest eligible options first (most constrained first).
+  const sortedSlots = [...slots].sort((a, b) => {
     const aOpts = THIRD_SLOTS[a].filter(g => qualifyingGroups.includes(g)).length;
     const bOpts = THIRD_SLOTS[b].filter(g => qualifyingGroups.includes(g)).length;
     return aOpts - bOpts;
@@ -672,7 +677,10 @@ function resolveAnnexC(qualifyingGroups) {
   function bt(idx, remaining) {
     if (idx === sortedSlots.length) return true;
     const slot = sortedSlots[idx];
-    const eligible = THIRD_SLOTS[slot].filter(g => remaining.includes(g));
+    // Sort candidates alphabetically for determinism (matches FIFA ordering).
+    const eligible = THIRD_SLOTS[slot]
+      .filter(g => remaining.includes(g))
+      .sort();
     for (const group of eligible) {
       assignment[slot] = group;
       if (bt(idx + 1, remaining.filter(g => g !== group))) return true;
@@ -682,8 +690,9 @@ function resolveAnnexC(qualifyingGroups) {
   }
 
   bt(0, [...qualifyingGroups]);
-  return assignment; // may be partial if no full assignment found (edge cases)
+  return assignment;
 }
+
 
 // ============================================================
 // SECTION 6: BRACKET RENDERER

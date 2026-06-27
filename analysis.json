@@ -208,5 +208,35 @@
       "t2_weakness": "Despite dominating statistically, they show serious difficulties in penetrating defenses that sit deep in a low block. Their recent goalless draw against Ghana proved that high possession does not always translate into fluidity or effectiveness in front of goal.",
       "source": "Concacaf.com (26 Jun 2026) · The Guardian (23-24 Jun 2026) · FIFA.com (26 Jun 2026) · No specific videos found from @PedroElIngeniero or @lapizarradelprofe in the last 5 days · *Note: Overall possession and passing stats estimated from partial averages of official reports."
     }
+  },
+  "Croatia|Ghana": {
+    "stats": {
+      "possession": [
+        56,
+        44
+      ],
+      "passing": [
+        85,
+        80
+      ],
+      "shots": [
+        4,
+        2
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "Croacia mantiene un sólido control en el mediocampo, promediando un 85% de precisión en pases para manejar los tiempos. Tras su victoria ante Panamá, reafirmaron su capacidad de dominar la posesión y dictar el ritmo del encuentro.",
+      "t1_weakness": "La línea defensiva croata es muy vulnerable ante la velocidad rival, habiendo concedido 4 goles en su debut mundialista. Sufren especialmente en el retroceso ante equipos que recuperan y salen rápido al espacio.",
+      "t2_strength": "Ghana ha construido un muro defensivo sumamente disciplinado, logrando mantener su portería en cero en sus dos primeros partidos frente a Panamá e Inglaterra. Se sienten cómodos cediendo el protagonismo y defendiendo en un bloque bajo muy rocoso.",
+      "t2_weakness": "Su principal carencia es la escasa generación de juego ofensivo sostenido, promediando a nivel de torneo una menor precisión de pases (80%). Dependen excesivamente de ataques aislados, registrando pocos remates al arco frente a rivales de mayor peso.",
+      "source": "FotMob (26 Jun 2026) · FIFA.com (26 Jun 2026) · YouTube: Pedro el Ingeniero (23 Jun 2026) · YouTube: La Pizarra del Profe (24 Jun 2026) · Nota: Posesión estimada ajustando a 100 los promedios reales de la fase de grupos."
+    },
+    "ai_analysis_en": {
+      "t1_strength": "Croatia maintains solid control in the midfield, averaging 85% passing accuracy to manage the tempo. Following their victory against Panama, they reaffirmed their ability to dominate possession and dictate the pace of the match.",
+      "t1_weakness": "The Croatian defensive line is highly vulnerable to opponent speed, having conceded 4 goals in their World Cup debut. They suffer especially in transition against teams that win the ball back and attack the space quickly.",
+      "t2_strength": "Ghana has built a highly disciplined defensive wall, managing to keep clean sheets in their first two matches against Panama and England. They feel comfortable sitting back and defending in a very solid low block.",
+      "t2_weakness": "Their main shortcoming is a lack of sustained offensive playmaking, averaging lower passing accuracy across the tournament (80%). They rely too heavily on isolated attacks, recording very few shots on target against stronger opponents.",
+      "source": "FotMob (26 Jun 2026) · FIFA.com (26 Jun 2026) · YouTube: Pedro el Ingeniero (23 Jun 2026) · YouTube: La Pizarra del Profe (24 Jun 2026) · Note: Possession estimated by adjusting actual group stage averages to 100."
+    }
   }
 }

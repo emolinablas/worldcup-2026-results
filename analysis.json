@@ -118,5 +118,35 @@
       "t2_weakness": "They have serious difficulties in proactive playmaking, drastically limiting their scoring opportunities to isolated plays or set pieces.",
       "source": "Google Sports Data (2026 Results) · Goal.com (2026 Previews) · Squawka"
     }
+  },
+  "New Zealand|Belgium": {
+    "stats": {
+      "possession": [
+        35,
+        65
+      ],
+      "passing": [
+        75,
+        88
+      ],
+      "shots": [
+        5,
+        12
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "Nueva Zelanda prioriza un bloque defensivo compacto y resiliente para intentar resistir el dominio de selecciones más fuertes.",
+      "t1_weakness": "Su mayor vulnerabilidad es la ineficacia en ataque, sumando varios partidos consecutivos sin poder anotar un solo gol.",
+      "t2_strength": "Bélgica domina el control del mediocampo y la posesión del balón gracias a la calidad técnica de su plantilla.",
+      "t2_weakness": "Han fallado en ser contundentes de cara al arco rival, lo que les ha costado empates consecutivos (ante Egipto e Irán) en esta fase de grupos.",
+      "source": "Google Sports Data · Sports Illustrated · (Datos de posesión, pases y tiros estimados según tendencia ante falta de métricas oficiales; no se encontraron videos recientes de los canales solicitados para este partido en YouTube)"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "New Zealand prioritizes a compact and resilient defensive block to try and withstand the dominance of stronger teams.",
+      "t1_weakness": "Their greatest vulnerability is their ineffectiveness in attack, going several consecutive matches without being able to score a single goal.",
+      "t2_strength": "Belgium dominates midfield control and ball possession thanks to the technical quality of their squad.",
+      "t2_weakness": "They have failed to be clinical in front of goal, which has cost them consecutive draws (against Egypt and Iran) in this group stage.",
+      "source": "Google Sports Data · Sports Illustrated · (Stats estimated due to lack of official metrics; no recent videos found on requested YouTube channels)"
+    }
   }
 }

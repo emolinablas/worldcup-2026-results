@@ -81,6 +81,7 @@ const STRINGS = {
     winner_abbr: 'Gan.',
     loser_abbr: 'Perd.',
     third_place_medal: 'Tercer Lugar',
+    bracket_updated_notice: '✅ Las llaves han sido corregidas con base en la información actualizada y los cálculos oficiales proporcionados por la FIFA.',
     ai_announce_title: '🧠 ¡Análisis Disponible!',
     ai_announce_body: 'Ya tenemos listo el análisis táctico con Inteligencia Artificial para el partido de Colombia vs Portugal. Busca el botón morado "🧠 Análisis IA" debajo del partido.',
     ai_announce_cta: 'Ver partido →',
@@ -166,6 +167,7 @@ const STRINGS = {
     winner_abbr: 'Win.',
     loser_abbr: 'Los.',
     third_place_medal: 'Third Place',
+    bracket_updated_notice: '✅ The bracket has been corrected based on updated information and official calculations provided by FIFA.',
     ai_announce_title: '🧠 Analysis Available!',
     ai_announce_body: 'We have the AI tactical analysis ready for the Colombia vs Portugal match. Look for the purple "🧠 AI Analysis" button below the match.',
     ai_announce_cta: 'View match →',
@@ -241,27 +243,44 @@ const COL_X = {
   R32R:  (BC_W + BN_W) * 8,
 };
 
-/** Round of 32 — structure & team slots */
+/** Round of 32 — structure & team slots (FIFA 2026 official regulations) */
 const R32_MATCHES = [
-  // ── LEFT SIDE ──────────────────────────────────────────
-  { id: 'M73', col: 'R32L', slotY: 0, team1: { type: '2nd', group: 'A' }, team2: { type: '2nd', group: 'B' } },
+  // ── LEFT SIDE ──────────────────────────────────────────────────────────────
+  // M73: Winner A vs Winner B (Foxborough, Jun 29)
+  { id: 'M73', col: 'R32L', slotY: 0, team1: { type: '1st', group: 'A' }, team2: { type: '1st', group: 'B' } },
+  // M74: Winner E vs 3rd (A/B/C/D/F) (East Rutherford, Jun 30)
   { id: 'M74', col: 'R32L', slotY: 1, team1: { type: '1st', group: 'E' }, team2: { type: '3rd', eligible: ['A','B','C','D','F'] } },
-  { id: 'M75', col: 'R32L', slotY: 2, team1: { type: '1st', group: 'F' }, team2: { type: '2nd', group: 'C' } },
-  { id: 'M76', col: 'R32L', slotY: 3, team1: { type: '1st', group: 'C' }, team2: { type: '2nd', group: 'F' } },
-  { id: 'M77', col: 'R32L', slotY: 4, team1: { type: '1st', group: 'I' }, team2: { type: '3rd', eligible: ['C','D','F','G','H'] } },
-  { id: 'M78', col: 'R32L', slotY: 5, team1: { type: '2nd', group: 'E' }, team2: { type: '2nd', group: 'I' } },
-  { id: 'M79', col: 'R32L', slotY: 6, team1: { type: '1st', group: 'A' }, team2: { type: '3rd', eligible: ['C','E','F','H','I'] } },
-  { id: 'M80', col: 'R32L', slotY: 7, team1: { type: '2nd', group: 'D' }, team2: { type: '2nd', group: 'G' } },
-  // ── RIGHT SIDE ─────────────────────────────────────────
-  { id: 'M81', col: 'R32R', slotY: 0, team1: { type: '1st', group: 'B' }, team2: { type: '3rd', eligible: ['E','F','G','I','J'] } },
-  { id: 'M82', col: 'R32R', slotY: 1, team1: { type: '1st', group: 'J' }, team2: { type: '2nd', group: 'H' } },
-  { id: 'M83', col: 'R32R', slotY: 2, team1: { type: '1st', group: 'H' }, team2: { type: '2nd', group: 'J' } },
-  { id: 'M84', col: 'R32R', slotY: 3, team1: { type: '2nd', group: 'K' }, team2: { type: '2nd', group: 'L' } },
-  { id: 'M85', col: 'R32R', slotY: 4, team1: { type: '1st', group: 'G' }, team2: { type: '3rd', eligible: ['A','E','H','I','J'] } },
-  { id: 'M86', col: 'R32R', slotY: 5, team1: { type: '1st', group: 'K' }, team2: { type: '3rd', eligible: ['D','E','I','J','L'] } },
-  { id: 'M87', col: 'R32R', slotY: 6, team1: { type: '1st', group: 'L' }, team2: { type: '3rd', eligible: ['E','H','I','J','K'] } },
-  { id: 'M88', col: 'R32R', slotY: 7, team1: { type: '1st', group: 'D' }, team2: { type: '3rd', eligible: ['B','E','F','I','J'] } },
+  // M75: Runner-up A vs Runner-up B (Inglewood, Jun 28)
+  { id: 'M75', col: 'R32L', slotY: 2, team1: { type: '2nd', group: 'A' }, team2: { type: '2nd', group: 'B' } },
+  // M76: Winner F vs Runner-up E (Guadalupe, Jun 29)
+  { id: 'M76', col: 'R32L', slotY: 3, team1: { type: '1st', group: 'F' }, team2: { type: '2nd', group: 'E' } },
+  // M77: Runner-up K vs Runner-up L (Toronto, Jul 2)
+  { id: 'M77', col: 'R32L', slotY: 4, team1: { type: '2nd', group: 'K' }, team2: { type: '2nd', group: 'L' } },
+  // M78: Winner H vs Runner-up J (Inglewood, Jul 2)
+  { id: 'M78', col: 'R32L', slotY: 5, team1: { type: '1st', group: 'H' }, team2: { type: '2nd', group: 'J' } },
+  // M79: Winner C vs Runner-up D (Santa Clara, Jul 1)
+  { id: 'M79', col: 'R32L', slotY: 6, team1: { type: '1st', group: 'C' }, team2: { type: '2nd', group: 'D' } },
+  // M80: Winner G vs 3rd (A/I/J) (Seattle, Jul 1)
+  { id: 'M80', col: 'R32L', slotY: 7, team1: { type: '1st', group: 'G' }, team2: { type: '3rd', eligible: ['A','I','J'] } },
+  // ── RIGHT SIDE ─────────────────────────────────────────────────────────────
+  // M81: Winner D vs Runner-up C (Houston, Jun 29)
+  { id: 'M81', col: 'R32R', slotY: 0, team1: { type: '1st', group: 'D' }, team2: { type: '2nd', group: 'C' } },
+  // M82: Winner I vs Runner-up F (Arlington, Jun 30)
+  { id: 'M82', col: 'R32R', slotY: 1, team1: { type: '1st', group: 'I' }, team2: { type: '2nd', group: 'F' } },
+  // M83: Winner A vs 3rd (C/E) (Mexico City, Jun 30)
+  { id: 'M83', col: 'R32R', slotY: 2, team1: { type: '1st', group: 'A' }, team2: { type: '3rd', eligible: ['C','E'] } },
+  // M84: Winner L vs 3rd (I/J/K) (Atlanta, Jul 1)
+  { id: 'M84', col: 'R32R', slotY: 3, team1: { type: '1st', group: 'L' }, team2: { type: '3rd', eligible: ['I','J','K'] } },
+  // M85: Winner J vs Runner-up I (Miami, Jul 3)
+  { id: 'M85', col: 'R32R', slotY: 4, team1: { type: '1st', group: 'J' }, team2: { type: '2nd', group: 'I' } },
+  // M86: Winner B vs Runner-up A (Arlington, Jul 3)
+  { id: 'M86', col: 'R32R', slotY: 5, team1: { type: '1st', group: 'B' }, team2: { type: '2nd', group: 'G' } },
+  // M87: Winner K vs 3rd (G/J) (Vancouver, Jul 2)
+  { id: 'M87', col: 'R32R', slotY: 6, team1: { type: '2nd', group: 'H' }, team2: { type: '3rd', eligible: ['G','J'] } },
+  // M88: Winner K vs 3rd (E/I/L) (Kansas City, Jul 3)
+  { id: 'M88', col: 'R32R', slotY: 7, team1: { type: '1st', group: 'K' }, team2: { type: '3rd', eligible: ['E','I','L'] } },
 ];
+
 
 /** Bracket tree: which R32 pairs feed into R16, then QF, SF, Final */
 const BRACKET_TREE = {
@@ -283,16 +302,14 @@ const BRACKET_TREE = {
   '3RD':   { from: ['SF1','SF2'],     col: 'FIN', slotY: 5.5, isThirdPlace: true },
 };
 
-/** Third-place slots and their eligible group letters (Annex C FIFA 2026) */
+/** Third-place slots and their eligible group letters (Annex C FIFA 2026 official regulations) */
 const THIRD_SLOTS = {
   'M74': ['A','B','C','D','F'],
-  'M77': ['C','D','F','G','H'],
-  'M79': ['C','E','F','H','I'],
-  'M81': ['E','F','G','I','J'],
-  'M85': ['A','E','H','I','J'],
-  'M86': ['D','E','I','J','L'],
-  'M87': ['E','H','I','J','K'],
-  'M88': ['B','E','F','I','J'],
+  'M80': ['A','I','J'],
+  'M83': ['C','E'],
+  'M84': ['I','J','K'],
+  'M87': ['G','J'],
+  'M88': ['E','I','L'],
 };
 
 /** ISO 3166-1 alpha-2 flag codes for team names */

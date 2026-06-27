@@ -1,9 +1,18 @@
 {
   "Spain|Uruguay": {
     "stats": {
-      "possession": [65, 35],
-      "passing": [91, 78],
-      "shots": [6, 3]
+      "possession": [
+        65,
+        35
+      ],
+      "passing": [
+        91,
+        78
+      ],
+      "shots": [
+        6,
+        3
+      ]
     },
     "ai_analysis": {
       "t1_strength": "España domina mediante un control absoluto del mediocampo y la amplitud generada por sus extremos, como Lamine Yamal. Esto se refleja en su alta precisión de pases estimada y su aplastante victoria 4-0 sobre Arabia Saudita.",
@@ -22,9 +31,18 @@
   },
   "Norway|France": {
     "stats": {
-      "possession": [42, 58],
-      "passing": [82, 88],
-      "shots": [6, 7]
+      "possession": [
+        42,
+        58
+      ],
+      "passing": [
+        82,
+        88
+      ],
+      "shots": [
+        6,
+        7
+      ]
     },
     "ai_analysis": {
       "t1_strength": "Noruega exhibe un poderío ofensivo letal con 7 goles en apenas dos partidos, aprovechando al máximo sus transiciones rápidas. Su capacidad para definir con pocos toques compensa su menor tiempo de posesión frente a rivales dominantes.",
@@ -39,6 +57,36 @@
       "t2_strength": "France dictates the pace of the game with their possession dominance (58%) and a solid defense that has only allowed 1 goal in the tournament. The precision in their midfield makes it easy for them to dismantle rival low blocks while generating multiple shots on target.",
       "t2_weakness": "By playing with a very high line to sustain possession, the French side runs the risk of exposing the space behind their center-backs. This is the exact vulnerability that Norway's quick counterattacks and through balls aim to exploit.",
       "source": "FIFA.com (25 Jun 2026) · FOX Sports (25 Jun 2026) · YouTube @PedroElIngeniero (23 Jun 2026) · YouTube @lapizarradelprofe (25 Jun 2026)"
+    }
+  },
+  "Colombia|Portugal": {
+    "stats": {
+      "possession": [
+        43,
+        57
+      ],
+      "passing": [
+        82,
+        89
+      ],
+      "shots": [
+        10,
+        14
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "Colombia mantiene un bloque defensivo muy físico y aprovecha transiciones veloces para atacar los espacios por las bandas.",
+      "t1_weakness": "Sufre un gran desgaste al ceder la iniciativa y puede desorganizarse tácticamente ante equipos con circulación de balón muy rápida.",
+      "t2_strength": "Portugal domina el ritmo del partido a través de posesiones largas y una excelente capacidad de triangulación en el mediocampo.",
+      "t2_weakness": "Su línea defensiva adelantada los expone constantemente a contragolpes directos y balones largos a la espalda de sus centrales.",
+      "source": "Datos estimados por restricciones de búsqueda web en tiempo real · FIFA.com (Tendencias tácticas históricas) · FBref (Perfiles de rendimiento)"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "Colombia maintains a very physical defensive block and takes advantage of fast transitions to attack the spaces on the wings.",
+      "t1_weakness": "They suffer a great deal of wear by giving up the initiative and can become tactically disorganized against teams with very fast ball circulation.",
+      "t2_strength": "Portugal dominates the pace of the game through long possessions and excellent triangulation capability in the midfield.",
+      "t2_weakness": "Their high defensive line constantly exposes them to direct counterattacks and long balls behind their center-backs.",
+      "source": "Estimated data due to real-time web search restrictions · FIFA.com (Historical tactical trends) · FBref (Performance profiles)"
     }
   }
 }

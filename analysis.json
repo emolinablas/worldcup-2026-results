@@ -268,5 +268,35 @@
       "t2_weakness": "They struggle physically in individual duels and defensive aerial play against robust forwards. If forced to dictate the pace of the game and attack in a positional block, they often lack the necessary creativity in the final third.",
       "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
     }
+  },
+  "Netherlands|Morocco": {
+    "stats": {
+      "possession": [
+        58,
+        42
+      ],
+      "passing": [
+        88,
+        80
+      ],
+      "shots": [
+        12,
+        9
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "La principal fortaleza de Países Bajos radica en su flexibilidad posicional en el mediocampo, permitiendo transiciones rápidas a través de sus veloces carrileros. Su sólida línea de tres en el fondo facilita una salida de balón limpia y controlada bajo presión.",
+      "t1_weakness": "A menudo sufren cuando se enfrentan a bloques bajos muy compactos, careciendo de la creatividad necesaria en el último tercio para romper defensas cerradas. Además, su línea defensiva alta los deja vulnerables a contraataques directos a sus espaldas.",
+      "t2_strength": "Marruecos destaca por su organización defensiva impecable y su agresiva presión en bloque medio, cerrando los carriles interiores con extrema eficacia. Desde allí, lanzan contraataques letales por las bandas aprovechando el desequilibrio y velocidad de sus extremos.",
+      "t2_weakness": "Su excesiva dependencia del juego exterior los hace predecibles si el rival logra neutralizar las proyecciones de sus laterales ofensivos. También muestran dificultades para proponer juego y retener la posesión prolongada cuando se encuentran en desventaja en el marcador.",
+      "source": "Análisis táctico impulsado por Gemini AI basado en el rendimiento de la fase de grupos del Mundial 2026"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "The main strength of the Netherlands lies in their positional flexibility in midfield, allowing for quick transitions through their fast wing-backs. Their solid back three facilitates clean and controlled ball progression under pressure.",
+      "t1_weakness": "They often struggle when facing highly compact low blocks, lacking the necessary creativity in the final third to break down resolute defenses. Additionally, their high defensive line leaves them vulnerable to direct counter-attacks in behind.",
+      "t2_strength": "Morocco stands out for their impeccable defensive organization and aggressive mid-block pressing, closing off interior passing lanes with extreme efficiency. From there, they launch lethal counter-attacks down the flanks utilizing the flair and speed of their wingers.",
+      "t2_weakness": "Their over-reliance on wide play makes them predictable if the opponent manages to neutralize the forward runs of their attacking full-backs. They also show difficulties in dictating play and retaining prolonged possession when they are trailing in the scoreline.",
+      "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
+    }
   }
 }

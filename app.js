@@ -1623,8 +1623,12 @@ function openAiModalByKey(team1Name, team2Name) {
 
 function setupAiAnnouncement() {
   const KEY = 'wc26_ai_announced_date_v4';
+  // This announcement was for Colombia vs Portugal (Jun 26 2026) — disable after match date
+  const EXPIRY = '2026-06-27'; // day after match, never show again after this
   const today = new Date().toISOString().slice(0, 10);
+  if (today >= EXPIRY) return; // match already played, never show again
   if (localStorage.getItem(KEY) === today) return; // already shown today
+
 
   const overlay = document.getElementById('aiAnnounceModal');
   if (!overlay) return;

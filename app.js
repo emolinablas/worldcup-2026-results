@@ -764,7 +764,7 @@ function resolveAnnexC(qualifyingGroups) {
  * Main bracket rendering function.
  * Creates the bracket-body div with all match cards, then draws SVG connectors.
  */
-function renderBracket(groups) {
+function renderBracket(groups, allMatches = []) {
   const wrap = document.getElementById('bracketWrap');
   const loader = document.getElementById('bracketLoader');
   if (loader) loader.remove();
@@ -821,6 +821,18 @@ function renderBracket(groups) {
   const top8Thirds = thirdPlaceRanked.slice(0, 8);
   const qualifyingGroups = top8Thirds.map(t => t.fromGroup);
   const annexC = resolveAnnexC(qualifyingGroups);
+
+  // ── Build knockout results map from real API data ─────────────────────
+  // Match real fixture scores to R32 match slots by team name fuzzy match.
+  const knockoutResults = {}; // matchId → { score1, score2, status, winner }
+  const koMatches = allMatches.filter(m =>
+    m.status === 'finished' || m.status === 'live'
+  );
+  R32_MATCHES.forEach(slot => {
+    // We'll try to match once we know the two projected teams
+  });
+  // Store for later use after resolveTeam calls
+  const _koMatchData = koMatches;
 
   // Group all completed = has played all matches
   const groupsCompleted = {};
@@ -892,6 +904,15 @@ function renderBracket(groups) {
     return { name: '—', status: 'tbd', flag: '' };
   }
 
+  // ── Helper: fuzzy name match for knockout results ──────────────────────
+  function nameMatches(apiName, resolvedName) {
+    if (!apiName || !resolvedName) return false;
+    const norm = s => s.toLowerCase().replace(/[^a-z]/g, '');
+    const a = norm(apiName), b = norm(resolvedName);
+    return a === b || a.includes(b) || b.includes(a) ||
+           a.startsWith(b.slice(0,5)) || b.startsWith(a.slice(0,5));
+  }
+
   // Render R32 matches
   const r32Results = {}; // track which team "won" for bracket progression
   R32_MATCHES.forEach(m => {
@@ -901,20 +922,52 @@ function renderBracket(groups) {
 
     const t1 = resolveTeam(m.team1);
     const t2 = resolveTeam(m.team2);
-    const overallStatus = (t1.status === 'confirmed' && t2.status === 'confirmed') ? 'confirmed'
-                        : (t1.status === 'tbd' || t2.status === 'tbd') ? 'tbd'
-                        : 'projected';
+
+    // Try to find a real played result for this slot
+    let realScore1 = null, realScore2 = null, realStatus = null;
+    if (t1.name && t2.name && t1.name !== '—') {
+      const real = _koMatchData.find(k =>
+        (nameMatches(k.team1, t1.name) && nameMatches(k.team2, t2.name)) ||
+        (nameMatches(k.team1, t2.name) && nameMatches(k.team2, t1.name))
+      );
+      if (real) {
+        const flipped = nameMatches(real.team1, t2.name);
+        realScore1 = flipped ? real.score2 : real.score1;
+        realScore2 = flipped ? real.score1 : real.score2;
+        realStatus = real.status; // 'finished' or 'live'
+      }
+    }
+
+    if (realScore1 !== null) {
+      t1.score = realScore1;
+      t2.score = realScore2;
+    }
+
+    const played = realScore1 !== null && realStatus === 'finished';
+    const live   = realStatus === 'live';
+    const overallStatus = live ? 'live'
+      : played ? 'done'
+      : (t1.status === 'confirmed' && t2.status === 'confirmed') ? 'confirmed'
+      : (t1.status === 'tbd' || t2.status === 'tbd') ? 'tbd'
+      : 'projected';
+
+    // Determine the winner for R16 propagation
+    let winner = null;
+    if (played && realScore1 !== null) {
+      winner = realScore1 > realScore2 ? t1 : realScore2 > realScore1 ? t2 : null;
+      if (winner) winner = { ...winner, status: 'confirmed' };
+    }
 
     const card = createMatchCard({
       id: m.id, label: m.id,
-      date: '', // Dates start June 28
+      date: '',
       t1, t2, overallStatus,
     });
     card.style.top  = yT + 'px';
     card.style.left = xL + 'px';
     body.appendChild(card);
 
-    r32Results[m.id] = { t1, t2, status: overallStatus };
+    r32Results[m.id] = { t1, t2, status: overallStatus, winner };
   });
 
   // Render subsequent rounds (R16, QF, SF, Final)
@@ -928,7 +981,8 @@ function renderBracket(groups) {
     function getProjected(fromId) {
       const prev = r32Results[fromId];
       if (!prev) return { name: `${t('winner_abbr')} ${fromId}`, status: 'tbd', flag: '' };
-      // We don't know the winner yet, show as TBD but with a hint
+      // If the match is done and we know the winner, show their name
+      if (prev.winner) return prev.winner;
       return { name: `${t('winner_abbr')} ${fromId}`, status: 'tbd', flag: '' };
     }
 
@@ -1649,7 +1703,7 @@ async function loadAndRender() {
     const groups = buildGroups(matches);
     const hasLive = matches.some(m => m.status === 'live');
 
-    renderBracket(groups);
+    renderBracket(groups, matches);
     renderGroups(groups);
     renderThirds(groups);
     renderHotArea(groups);

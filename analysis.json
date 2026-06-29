@@ -238,5 +238,35 @@
       "t2_weakness": "Their main shortcoming is a lack of sustained offensive playmaking, averaging lower passing accuracy across the tournament (80%). They rely too heavily on isolated attacks, recording very few shots on target against stronger opponents.",
       "source": "FotMob (26 Jun 2026) · FIFA.com (26 Jun 2026) · YouTube: Pedro el Ingeniero (23 Jun 2026) · YouTube: La Pizarra del Profe (24 Jun 2026) · Note: Possession estimated by adjusting actual group stage averages to 100."
     }
+  },
+  "Brazil|Japan": {
+    "stats": {
+      "possession": [
+        62,
+        38
+      ],
+      "passing": [
+        89,
+        81
+      ],
+      "shots": [
+        15,
+        8
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "El juego de Brasil se ha centrado en una presión altísima tras pérdida y transiciones ofensivas letales por las bandas. Su capacidad para desorganizar bloques bajos mediante el regate y la movilidad de sus extremos es su mayor arma.",
+      "t1_weakness": "Su agresividad ofensiva suele dejar demasiado espacio a la espalda de sus laterales, haciéndolos vulnerables a los contragolpes. Además, sufren para defender centros al área cuando el rival supera su primera línea de presión.",
+      "t2_strength": "Japón ha demostrado un bloque medio-bajo extremadamente compacto y disciplinado, cerrando pasillos interiores con gran eficiencia. Su transición de defensa a ataque es vertiginosa, apoyada en mediocampistas muy dinámicos y extremos veloces.",
+      "t2_weakness": "Sufren físicamente en los duelos individuales y en el juego aéreo defensivo contra delanteros robustos. Si se ven obligados a llevar el peso del partido y atacar en bloque posicional, suelen carecer de la creatividad necesaria en el último tercio.",
+      "source": "Análisis táctico impulsado por Gemini AI basado en el rendimiento de la fase de grupos del Mundial 2026"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "Brazil's game has centered on extremely high counter-pressing and lethal offensive transitions down the flanks. Their ability to disorganize low blocks through dribbling and the mobility of their wingers is their greatest weapon.",
+      "t1_weakness": "Their offensive aggression often leaves too much space behind their full-backs, making them vulnerable to counterattacks. Additionally, they struggle to defend crosses into the box when the opponent bypasses their first line of pressure.",
+      "t2_strength": "Japan has demonstrated an extremely compact and disciplined mid-low block, closing inner channels with great efficiency. Their transition from defense to attack is dizzying, supported by highly dynamic midfielders and fast wingers.",
+      "t2_weakness": "They struggle physically in individual duels and defensive aerial play against robust forwards. If forced to dictate the pace of the game and attack in a positional block, they often lack the necessary creativity in the final third.",
+      "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
+    }
   }
 }

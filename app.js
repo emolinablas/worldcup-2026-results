@@ -997,16 +997,37 @@ function renderBracket(groups, allMatches = []) {
     let t1 = resolveTeam(m.team1);
     let t2 = resolveTeam(m.team2);
 
-    // ── Override t2 with real R32 fixture data from openfootball ──────────
-    // Only _r32Fixtures (round='Round of 32', no group) are used — safe from group-stage contamination.
-    if (t1.name && t1.name !== '—') {
+    // ── Override both teams with confirmed R32 fixture data from openfootball ─────
+    // _r32Fixtures contains only Round of 32 matches (no group field, round='Round of 32').
+    // We try to find the fixture for this slot by matching EITHER projected team.
+    // This corrects cases where annexC or standings give wrong projections
+    // (e.g. Spain instead of Egypt for M88, or Paraguay instead of Sweden for M77).
+    {
+      const knownT1Names = [t1.name].filter(n => n && n !== '—');
+      const knownT2Names = [t2.name].filter(n => n && n !== '—');
       const fixture = _r32Fixtures.find(k =>
-        nameMatches(k.team1, t1.name) || nameMatches(k.team2, t1.name)
+        knownT1Names.some(n => nameMatches(k.team1, n) || nameMatches(k.team2, n)) ||
+        knownT2Names.some(n => nameMatches(k.team1, n) || nameMatches(k.team2, n))
       );
       if (fixture) {
-        const apiOpponent = nameMatches(fixture.team1, t1.name) ? fixture.team2 : fixture.team1;
-        if (apiOpponent && apiOpponent.length > 1 && !nameMatches(apiOpponent, t2.name)) {
-          t2 = { name: apiOpponent, status: 'confirmed', flag: getFlagUrl(apiOpponent) };
+        // Determine which fixture side matches t1 vs t2
+        const t1MatchesHome = nameMatches(fixture.team1, t1.name);
+        const t1MatchesAway = nameMatches(fixture.team2, t1.name);
+        const t2MatchesHome = nameMatches(fixture.team1, t2.name);
+
+        let apiT1Name, apiT2Name;
+        if (t1MatchesHome || (!t1MatchesAway && t2MatchesHome)) {
+          apiT1Name = fixture.team1;
+          apiT2Name = fixture.team2;
+        } else {
+          apiT1Name = fixture.team2;
+          apiT2Name = fixture.team1;
+        }
+        if (apiT1Name && !nameMatches(apiT1Name, t1.name)) {
+          t1 = { name: apiT1Name, status: 'confirmed', flag: getFlagUrl(apiT1Name) };
+        }
+        if (apiT2Name && !nameMatches(apiT2Name, t2.name)) {
+          t2 = { name: apiT2Name, status: 'confirmed', flag: getFlagUrl(apiT2Name) };
         }
       }
     }

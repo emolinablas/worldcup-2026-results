@@ -993,7 +993,13 @@ function renderBracket(groups, allMatches = []) {
       else if (t2.isWinner) winner = t2;
       else winner = realScore1 > realScore2 ? t1 : realScore2 > realScore1 ? t2 : null;
       
-      if (winner) winner = { ...winner, status: 'confirmed' };
+      if (winner) {
+        winner = { ...winner, status: 'confirmed' };
+        // Do not leak the previous round's score to the next round
+        delete winner.score;
+        delete winner.pen;
+        delete winner.isWinner;
+      }
     }
 
     const card = createMatchCard({

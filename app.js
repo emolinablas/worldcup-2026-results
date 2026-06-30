@@ -583,6 +583,10 @@ async function fetchFromESPN() {
       const live     = state === 'in';
       const s1 = (finished || live) ? parseInt(home.score, 10) : null;
       const s2 = (finished || live) ? parseInt(away.score, 10) : null;
+      const p1 = home.shootoutScore != null ? parseInt(home.shootoutScore, 10) : null;
+      const p2 = away.shootoutScore != null ? parseInt(away.shootoutScore, 10) : null;
+      const t1Winner = home.winner === true;
+      const t2Winner = away.winner === true;
 
       allMatches.push({
         team1: home.team?.displayName || home.team?.name || '',
@@ -590,6 +594,10 @@ async function fetchFromESPN() {
         group: null, // ESPN doesn't provide group info — will be merged from openfootball
         score1: s1 !== null && !isNaN(s1) ? s1 : null,
         score2: s2 !== null && !isNaN(s2) ? s2 : null,
+        pen1: p1 !== null && !isNaN(p1) ? p1 : null,
+        pen2: p2 !== null && !isNaN(p2) ? p2 : null,
+        t1Winner,
+        t2Winner,
         status: live ? 'live' : finished ? 'finished' : 'scheduled',
         date: ev.date ? ev.date.slice(0, 10) : '',
         round: 'Group Stage',
@@ -924,7 +932,9 @@ function renderBracket(groups, allMatches = []) {
     const t2 = resolveTeam(m.team2);
 
     // Try to find a real played result for this slot
-    let realScore1 = null, realScore2 = null, realStatus = null;
+    let realScore1 = null, realScore2 = null, realPen1 = null, realPen2 = null, realStatus = null;
+    let t1IsWinner = false, t2IsWinner = false;
+    
     if (t1.name && t2.name && t1.name !== '—') {
       const real = _koMatchData.find(k =>
         (nameMatches(k.team1, t1.name) && nameMatches(k.team2, t2.name)) ||
@@ -934,6 +944,10 @@ function renderBracket(groups, allMatches = []) {
         const flipped = nameMatches(real.team1, t2.name);
         realScore1 = flipped ? real.score2 : real.score1;
         realScore2 = flipped ? real.score1 : real.score2;
+        realPen1 = flipped ? real.pen2 : real.pen1;
+        realPen2 = flipped ? real.pen1 : real.pen2;
+        t1IsWinner = flipped ? real.t2Winner : real.t1Winner;
+        t2IsWinner = flipped ? real.t1Winner : real.t2Winner;
         realStatus = real.status; // 'finished' or 'live'
       }
     }
@@ -941,6 +955,10 @@ function renderBracket(groups, allMatches = []) {
     if (realScore1 !== null) {
       t1.score = realScore1;
       t2.score = realScore2;
+      t1.pen = realPen1;
+      t2.pen = realPen2;
+      t1.isWinner = t1IsWinner;
+      t2.isWinner = t2IsWinner;
     }
 
     const played = realScore1 !== null && realStatus === 'finished';
@@ -954,7 +972,10 @@ function renderBracket(groups, allMatches = []) {
     // Determine the winner for R16 propagation
     let winner = null;
     if (played && realScore1 !== null) {
-      winner = realScore1 > realScore2 ? t1 : realScore2 > realScore1 ? t2 : null;
+      if (t1.isWinner) winner = t1;
+      else if (t2.isWinner) winner = t2;
+      else winner = realScore1 > realScore2 ? t1 : realScore2 > realScore1 ? t2 : null;
+      
       if (winner) winner = { ...winner, status: 'confirmed' };
     }
 
@@ -1047,8 +1068,19 @@ function createMatchCard({ id, label, date, t1, t2, overallStatus }, extraClass 
   const hasScore2 = t2.score != null;
   const played = hasScore1 && hasScore2;
 
-  const w1 = played && t1.score > t2.score ? 'winner' : played && t1.score < t2.score ? 'loser' : '';
-  const w2 = played && t2.score > t1.score ? 'winner' : played && t2.score < t1.score ? 'loser' : '';
+  // Determine winner highlighting
+  let w1 = '', w2 = '';
+  if (played) {
+    if (t1.isWinner || t1.score > t2.score) w1 = 'winner';
+    else if (t2.isWinner || t2.score > t1.score) w2 = 'winner';
+    else { w1 = 'loser'; w2 = 'loser'; }
+    if (w1 === 'winner') w2 = 'loser';
+    if (w2 === 'winner') w1 = 'loser';
+  }
+
+  // Handle penalty shootouts display
+  const score1Display = played ? (t1.pen != null ? `(${t1.pen}) ${t1.score}` : t1.score) : '—';
+  const score2Display = played ? (t2.pen != null ? `(${t2.pen}) ${t2.score}` : t2.score) : '—';
 
   const liveHTML = overallStatus === 'live' ? '<div class="mc-live-dot"></div>' : '';
 
@@ -1061,12 +1093,12 @@ function createMatchCard({ id, label, date, t1, t2, overallStatus }, extraClass 
     <div class="mc-team ${w1}" title="${t1.name}">
       ${t1.flag ? `<img class="mc-flag" src="${t1.flag}" alt="${t1.name}" loading="lazy" onerror="this.style.display='none'">` : '<div class="mc-flag" style="background:#1e293b;border-radius:2px;"></div>'}
       <span class="mc-name ${t1.status === 'tbd' ? 'tbd' : ''}">${shorten(t1.name)}</span>
-      <span class="mc-score ${w1 === 'winner' ? 'winner-score' : ''}">${played ? t1.score : '—'}</span>
+      <span class="mc-score ${w1 === 'winner' ? 'winner-score' : ''}">${score1Display}</span>
     </div>
     <div class="mc-team ${w2}" title="${t2.name}">
       ${t2.flag ? `<img class="mc-flag" src="${t2.flag}" alt="${t2.name}" loading="lazy" onerror="this.style.display='none'">` : '<div class="mc-flag" style="background:#1e293b;border-radius:2px;"></div>'}
       <span class="mc-name ${t2.status === 'tbd' ? 'tbd' : ''}">${shorten(t2.name)}</span>
-      <span class="mc-score ${w2 === 'winner' ? 'winner-score' : ''}">${played ? t2.score : '—'}</span>
+      <span class="mc-score ${w2 === 'winner' ? 'winner-score' : ''}">${score2Display}</span>
     </div>`;
 
   // Inject AI Analysis button if data exists and teams are known

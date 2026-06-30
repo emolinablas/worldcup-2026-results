@@ -298,5 +298,95 @@
       "t2_weakness": "Their over-reliance on wide play makes them predictable if the opponent manages to neutralize the forward runs of their attacking full-backs. They also show difficulties in dictating play and retaining prolonged possession when they are trailing in the scoreline.",
       "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
     }
+  },
+  "Ivory Coast|Norway": {
+    "stats": {
+      "possession": [
+        45,
+        55
+      ],
+      "passing": [
+        78,
+        83
+      ],
+      "shots": [
+        9,
+        11
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "El equipo destaca por su transición ofensiva ultrarrápida, explotando los espacios por las bandas con extremos verticales. Su solidez en el doble pivote les permite recuperar balones y lanzar contraataques letales.",
+      "t1_weakness": "Sufren significativamente defendiendo las jugadas a balón parado y centros laterales debido a la falta de contundencia en el juego aéreo. Además, tienden a desconectarse en los últimos quince minutos de los partidos si el marcador está apretado.",
+      "t2_strength": "Noruega domina el juego directo y la finalización gracias a la presencia imponente de su delantero principal en el área rival. Su bloque medio es extremadamente disciplinado, cerrando pasillos interiores para forzar al rival hacia afuera.",
+      "t2_weakness": "Carecen de un mediocampista creativo capaz de romper líneas cerradas cuando el rival les cede la iniciativa y se encierra atrás. Su fuerte dependencia ofensiva en transiciones rápidas los vuelve predecibles en partidos de posesión lenta.",
+      "source": "Análisis táctico impulsado por Gemini AI basado en el rendimiento de la fase de grupos del Mundial 2026"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "The team stands out for its ultra-fast offensive transition, exploiting the spaces on the wings with vertical wingers. Their solidity in the double pivot allows them to recover balls and launch lethal counterattacks.",
+      "t1_weakness": "They suffer significantly defending set pieces and crosses due to a lack of forcefulness in aerial duels. Furthermore, they tend to disconnect in the last fifteen minutes of matches if the score is tight.",
+      "t2_strength": "Norway dominates direct play and finishing thanks to the imposing presence of their main striker in the opponent's box. Their mid-block is extremely disciplined, closing internal lanes to force the opponent out wide.",
+      "t2_weakness": "They lack a creative midfielder capable of breaking closed lines when the opponent yields the initiative and sits back. Their heavy offensive dependence on fast transitions makes them predictable in slow possession matches.",
+      "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
+    }
+  },
+  "France|Sweden": {
+    "stats": {
+      "possession": [
+        64,
+        36
+      ],
+      "passing": [
+        88,
+        77
+      ],
+      "shots": [
+        16,
+        6
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "La mayor fortaleza de Francia reside en sus transiciones ofensivas fulgurantes por las bandas, aprovechando la velocidad de sus extremos. Además, su mediocampo ofrece una gran solidez para recuperar el balón rápidamente tras pérdida.",
+      "t1_weakness": "El equipo tiende a sufrir cuando se enfrenta a bloques bajos muy compactos, frustrándose si no logran marcar un gol temprano. También suelen dejar espacios explotables a la espalda de sus laterales cuando estos se proyectan al ataque.",
+      "t2_strength": "Suecia destaca por su extrema disciplina táctica y un bloque defensivo muy organizado que concede muy pocos espacios entre líneas. Su principal arma ofensiva son los contraataques directos y el dominio absoluto del juego aéreo en jugadas a balón parado.",
+      "t2_weakness": "Su principal carencia es la falta de creatividad en el mediocampo para generar juego asociado cuando están obligados a llevar la iniciativa. Les cuesta mantener una posesión sostenida bajo presión alta, lo que a menudo aísla a sus delanteros.",
+      "source": "Análisis táctico impulsado por Gemini AI basado en el rendimiento de la fase de grupos del Mundial 2026"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "France's greatest strength lies in their lightning-fast offensive transitions on the flanks, taking advantage of their wingers' speed. Additionally, their midfield offers great solidity to recover the ball quickly after losing it.",
+      "t1_weakness": "The team tends to struggle when facing very compact low blocks, getting frustrated if they fail to score an early goal. They also tend to leave exploitable spaces behind their fullbacks when they push forward to attack.",
+      "t2_strength": "Sweden stands out for their extreme tactical discipline and a highly organized defensive block that concedes very few spaces between the lines. Their main offensive weapon is direct counterattacks and absolute aerial dominance in set-piece situations.",
+      "t2_weakness": "Their main shortcoming is the lack of creativity in midfield to generate associated play when forced to take the initiative. They struggle to maintain sustained possession under high pressure, which often isolates their forwards.",
+      "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
+    }
+  },
+  "Mexico|Ecuador": {
+    "stats": {
+      "possession": [
+        54,
+        46
+      ],
+      "passing": [
+        84,
+        80
+      ],
+      "shots": [
+        12,
+        10
+      ]
+    },
+    "ai_analysis": {
+      "t1_strength": "El mediocampo mexicano destaca por su rápida transición ofensiva y presión alta tras pérdida. Utilizan carrileros dinámicos para sobrecargar las bandas y crear oportunidades de centro.",
+      "t1_weakness": "La defensa central muestra vulnerabilidad ante el juego aéreo y delanteros físicos. Además, tienden a dejar espacios considerables a la espalda cuando la presión alta falla.",
+      "t2_strength": "Ecuador posee un bloque defensivo extremadamente sólido y compacto que frustra los ataques rivales por el centro. Su capacidad para lanzar contraataques letales a través de extremos veloces es sobresaliente.",
+      "t2_weakness": "El equipo suele sufrir para generar fútbol creativo cuando el rival les cede la posesión y se encierra. Dependen demasiado de jugadas a balón parado para romper empates en partidos cerrados.",
+      "source": "Análisis táctico impulsado por Gemini AI basado en el rendimiento de la fase de grupos del Mundial 2026"
+    },
+    "ai_analysis_en": {
+      "t1_strength": "The Mexican midfield stands out for its quick offensive transition and high counter-pressing after losing the ball. They use dynamic wing-backs to overload the flanks and create crossing opportunities.",
+      "t1_weakness": "The central defense shows vulnerability against aerial play and physical forwards. Additionally, they tend to leave significant spaces behind when the high press fails.",
+      "t2_strength": "Ecuador possesses an extremely solid and compact defensive block that frustrates opponent attacks through the center. Their ability to launch lethal counterattacks through fast wingers is outstanding.",
+      "t2_weakness": "The team often struggles to generate creative football when the opponent concedes possession and sits deep. They rely too heavily on set-pieces to break deadlocks in tight matches.",
+      "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
+    }
   }
 }

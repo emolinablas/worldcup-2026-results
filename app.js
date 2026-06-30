@@ -228,10 +228,10 @@ const BC_H  = 82;   // card height px
 const BS_H  = 100;  // slot height px (8 × 100 = 800 total)
 const BN_W  = 36;   // connector width px
 const BB_H  = 800;  // total bracket height px
-const BB_W  = BC_W * 9 + BN_W * 8; // 1855px total
+let BB_W  = BC_W * 9 + BN_W * 8; // 1855px total
 
 /** Column X positions (left edge of each match card column) */
-const COL_X = {
+let COL_X = {
   R32L:  0,
   R16L:  BC_W + BN_W,
   QFL:   (BC_W + BN_W) * 2,
@@ -794,9 +794,53 @@ function renderBracket(groups, allMatches = []) {
   const loader = document.getElementById('bracketLoader');
   if (loader) loader.remove();
 
-  // Clear previous
-  const old = wrap.querySelector('.bracket-area');
-  if (old) old.remove();
+  if (!wrap) return;
+  wrap.innerHTML = '';
+
+  // Determine if ALL R32 matches are finished so we can hide them
+  let allR32Done = true;
+  for (const m of R32_MATCHES) {
+    const t1 = resolveTeam(m.team1);
+    const t2 = resolveTeam(m.team2);
+    let isFinished = false;
+    if (t1.name && t2.name && t1.name !== '—') {
+      const real = _koMatchData.find(k =>
+        (nameMatches(k.team1, t1.name) && nameMatches(k.team2, t2.name)) ||
+        (nameMatches(k.team1, t2.name) && nameMatches(k.team2, t1.name))
+      );
+      if (real && real.status === 'finished') isFinished = true;
+    }
+    if (!isFinished) { allR32Done = false; break; }
+  }
+
+  // Adjust bracket layout dynamically
+  if (allR32Done) {
+    BB_W = BC_W * 7 + BN_W * 6; // Shrink by 2 columns
+    COL_X = {
+      R32L:  -9999, // Hidden
+      R16L:  0,
+      QFL:   (BC_W + BN_W),
+      SFL:   (BC_W + BN_W) * 2,
+      FIN:   (BC_W + BN_W) * 3,
+      SFR:   (BC_W + BN_W) * 4,
+      QFR:   (BC_W + BN_W) * 5,
+      R16R:  (BC_W + BN_W) * 6,
+      R32R:  -9999, // Hidden
+    };
+  } else {
+    BB_W = BC_W * 9 + BN_W * 8;
+    COL_X = {
+      R32L:  0,
+      R16L:  BC_W + BN_W,
+      QFL:   (BC_W + BN_W) * 2,
+      SFL:   (BC_W + BN_W) * 3,
+      FIN:   (BC_W + BN_W) * 4,
+      SFR:   (BC_W + BN_W) * 5,
+      QFR:   (BC_W + BN_W) * 6,
+      R16R:  (BC_W + BN_W) * 7,
+      R32R:  (BC_W + BN_W) * 8,
+    };
+  }
 
   const area = document.createElement('div');
   area.className = 'bracket-area';
@@ -817,6 +861,7 @@ function renderBracket(groups, allMatches = []) {
     { col:'R32R', label: t('round_of_32') },
   ];
   roundLabels.forEach(({ col, label }) => {
+    if (COL_X[col] < 0) return;
     const el = document.createElement('div');
     el.textContent = label;
     el.style.cssText = `position:absolute;left:${COL_X[col]}px;width:${BC_W}px;text-align:center;
@@ -993,15 +1038,16 @@ function renderBracket(groups, allMatches = []) {
       else if (t2.isWinner) winner = t2;
       else winner = realScore1 > realScore2 ? t1 : realScore2 > realScore1 ? t2 : null;
       
-      if (winner) {
-        winner = { ...winner, status: 'confirmed' };
-        // Do not leak the previous round's score to the next round
-        delete winner.score;
-        delete winner.pen;
-        delete winner.isWinner;
-      }
+    if (winner) {
+      winner = { ...winner, status: 'confirmed' };
+      // Do not leak the previous round's score to the next round
+      delete winner.score;
+      delete winner.pen;
+      delete winner.isWinner;
     }
+  }
 
+  if (!allR32Done) {
     const card = createMatchCard({
       id: m.id, label: m.id,
       date: '',
@@ -1010,9 +1056,10 @@ function renderBracket(groups, allMatches = []) {
     card.style.top  = yT + 'px';
     card.style.left = xL + 'px';
     body.appendChild(card);
+  }
 
-    r32Results[m.id] = { t1, t2, status: overallStatus, winner };
-  });
+  r32Results[m.id] = { t1, t2, status: overallStatus, winner };
+});
 
   // Render subsequent rounds (R16, QF, SF, Final)
   function renderRound(matchId, node) {
@@ -1065,7 +1112,7 @@ function renderBracket(groups, allMatches = []) {
   Object.entries(BRACKET_TREE).forEach(([id, node]) => renderRound(id, node));
 
   // Draw SVG connector lines
-  drawConnectors(svg, r32Results);
+  drawConnectors(svg, r32Results, allR32Done);
 
   // 3rd place separator label
   const label3rd = document.createElement('div');
@@ -1182,7 +1229,7 @@ function shorten(name) {
 // SECTION 7: SVG CONNECTOR DRAWING
 // ============================================================
 
-function drawConnectors(svg, _results) {
+function drawConnectors(svg, _results, hideR32 = false) {
   svg.innerHTML = '';
   const C_DEFAULT = 'rgba(255,255,255,0.1)';
   const C_GOLD    = 'rgba(245,158,11,0.4)';
@@ -1209,29 +1256,21 @@ function drawConnectors(svg, _results) {
   }
 
   // LEFT SIDE — edges extend to the right
-  const connXL = [
-    BC_W + BN_W / 2,                    // L1: between R32L and R16L → 192.5
-    (BC_W + BN_W) * 2 - BN_W / 2,      // L2: between R16L and QFL → 402.5
-    (BC_W + BN_W) * 3 - BN_W / 2,      // L3: between QFL and SFL → 612.5
-    (BC_W + BN_W) * 4 - BN_W / 2,      // L4: between SFL and FIN → 822.5
-  ];
-  // Recalc cleanly
-  const L1 = COL_X.R32L  + BC_W + BN_W / 2;  // 192.5
-  const L2 = COL_X.R16L  + BC_W + BN_W / 2;  // 402.5
-  const L3 = COL_X.QFL   + BC_W + BN_W / 2;  // 612.5
-  const L4 = COL_X.SFL   + BC_W + BN_W / 2;  // 822.5
+  const L1 = COL_X.R32L  + BC_W + BN_W / 2;
+  const L2 = COL_X.R16L  + BC_W + BN_W / 2;
+  const L3 = COL_X.QFL   + BC_W + BN_W / 2;
+  const L4 = COL_X.SFL   + BC_W + BN_W / 2;
 
   // R32L → R16L (4 pairs)
-  for (let i = 0; i < 4; i++) {
-    const y1 = (i * 2)     * BS_H + BS_H / 2;
-    const y2 = (i * 2 + 1) * BS_H + BS_H / 2;
-    elbow(COL_X.R32L + BC_W, y1, y2, L1, COL_X.R16L);
+  if (!hideR32) {
+    for (let i = 0; i < 4; i++) {
+      const y1 = (i * 2)     * BS_H + BS_H / 2;
+      const y2 = (i * 2 + 1) * BS_H + BS_H / 2;
+      elbow(COL_X.R32L + BC_W, y1, y2, L1, COL_X.R16L);
+    }
   }
   // R16L → QFL (2 pairs)
   for (let i = 0; i < 2; i++) {
-    const y1 = (i * 4 + 0.5) * BS_H + BS_H / 2 - BS_H / 2;  // center of R16-1 or R16-3
-    const y2 = (i * 4 + 2.5) * BS_H + BS_H / 2 - BS_H / 2;  // center of R16-2 or R16-4
-    // Simpler: use the actual center Y values
     const cy1 = (i === 0 ? 0.5 : 4.5) * BS_H + BS_H / 2;
     const cy2 = (i === 0 ? 2.5 : 6.5) * BS_H + BS_H / 2;
     elbow(COL_X.R16L + BC_W, cy1, cy2, L2, COL_X.QFL);
@@ -1248,17 +1287,19 @@ function drawConnectors(svg, _results) {
     line(COL_X.SFL + BC_W, cy, COL_X.FIN, cy, C_GOLD);
   }
 
-  // RIGHT SIDE — edges extend to the left
-  const R1 = COL_X.SFR   - BN_W / 2;   // 1032.5
-  const R2 = COL_X.QFR   - BN_W / 2;   // 1242.5
-  const R3 = COL_X.R16R  - BN_W / 2;   // 1452.5
-  const R4 = COL_X.R32R  - BN_W / 2;   // 1662.5
+  // RIGHT SIDE
+  const R1 = COL_X.SFR   - BN_W / 2;
+  const R2 = COL_X.QFR   - BN_W / 2;
+  const R3 = COL_X.R16R  - BN_W / 2;
+  const R4 = COL_X.R32R  - BN_W / 2;
 
-  // R32R → R16R (4 pairs, lines extend LEFT)
-  for (let i = 0; i < 4; i++) {
-    const y1 = (i * 2)     * BS_H + BS_H / 2;
-    const y2 = (i * 2 + 1) * BS_H + BS_H / 2;
-    elbow(COL_X.R32R, y1, y2, R4, COL_X.R16R + BC_W);
+  // R32R → R16R
+  if (!hideR32) {
+    for (let i = 0; i < 4; i++) {
+      const y1 = (i * 2)     * BS_H + BS_H / 2;
+      const y2 = (i * 2 + 1) * BS_H + BS_H / 2;
+      elbow(COL_X.R32R, y1, y2, R4, COL_X.R16R + BC_W);
+    }
   }
   // R16R → QFR
   for (let i = 0; i < 2; i++) {

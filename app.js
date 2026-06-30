@@ -454,13 +454,30 @@ function mergeESPNScores(base, espnMatches) {
     const espn = espnMap.get(key);
     if (!espn) return bm;
     // Overlay ESPN scores and status
-    const s1 = espn.score1 !== null ? espn.score1 : bm.score1;
-    const s2 = espn.score2 !== null ? espn.score2 : bm.score2;
-    // If ESPN says scores are flipped (home/away reversed), detect and correct
+    let s1 = bm.score1, s2 = bm.score2;
+    let pen1 = bm.pen1 || null, pen2 = bm.pen2 || null;
+    let t1Winner = false, t2Winner = false;
+
+    // Check if ESPN order is flipped relative to base order
+    const isFlipped = normKey(espn.team1) !== normKey(bm.team1);
+
+    if (espn.score1 !== null) {
+      s1 = isFlipped ? espn.score2 : espn.score1;
+      s2 = isFlipped ? espn.score1 : espn.score2;
+      pen1 = isFlipped ? espn.pen2 : espn.pen1;
+      pen2 = isFlipped ? espn.pen1 : espn.pen2;
+      t1Winner = isFlipped ? espn.t2Winner : espn.t1Winner;
+      t2Winner = isFlipped ? espn.t1Winner : espn.t2Winner;
+    }
+
     return {
       ...bm,
       score1: s1,
       score2: s2,
+      pen1,
+      pen2,
+      t1Winner,
+      t2Winner,
       status: espn.status !== 'scheduled' ? espn.status : bm.status,
     };
   });

@@ -797,6 +797,101 @@ function renderBracket(groups, allMatches = []) {
   if (!wrap) return;
   wrap.innerHTML = '';
 
+  // Build standings lookup: { 'A': [{team,rank,...}], ... }
+  const standings = {};
+  const thirdPlaceRanked = rankThirdPlace(groups);
+  const top8Thirds = thirdPlaceRanked.slice(0, 8);
+  const qualifyingGroups = top8Thirds.map(t => t.fromGroup);
+  const annexC = resolveAnnexC(qualifyingGroups);
+
+  // ── Build knockout results map from real API data ─────────────────────
+  // Match real fixture scores to R32 match slots by team name fuzzy match.
+  const knockoutResults = {}; // matchId → { score1, score2, status, winner }
+  const koMatches = allMatches.filter(m =>
+    m.status === 'finished' || m.status === 'live'
+  );
+  // Store for later use after resolveTeam calls
+  const _koMatchData = koMatches;
+
+  // Group all completed = has played all matches
+  const groupsCompleted = {};
+  Object.entries(groups).forEach(([g, grp]) => {
+    const totalExpected = 6; // C(4,2) = 6 matches per group
+    const played = grp.matches.filter(m => m.status === 'finished').length;
+    groupsCompleted[g] = played >= totalExpected;
+    standings[g] = grp.standings || [];
+  });
+
+  // ALL 12 groups must be done before any 3rd-place slot can be "confirmed"
+  // (because top-8 ranking requires knowing every group's 3rd place)
+  const allGroupsCompleted = Object.values(groupsCompleted).length === 12 &&
+                             Object.values(groupsCompleted).every(Boolean);
+
+  // Helper to resolve team info for a slot
+  function resolveTeam(slot) {
+    const { type, group, eligible } = slot;
+    const groupStandings = standings[group] || [];
+
+    if (type === '1st' || type === '2nd') {
+      const idx = type === '1st' ? 0 : 1;
+      const team = groupStandings[idx];
+      if (!team) return { name: `${idx===0?'1º':'2º'} ${t('group_prefix')} ${group}`, status: 'tbd', flag: '' };
+      // A 1st/2nd place is confirmed once their own group finishes
+      const confirmed = groupsCompleted[group] || false;
+      return {
+        name: team.name,
+        status: confirmed ? 'confirmed' : 'projected',
+        flag: getFlagUrl(team.name),
+        pts: team.pts,
+      };
+    }
+
+    if (type === '3rd') {
+      // Find which R32 match this 3rd-place slot belongs to
+      // by matching the eligible groups array
+      const r32match = R32_MATCHES.find(r =>
+        r.team2.type === '3rd' &&
+        r.team2.eligible &&
+        eligible &&
+        r.team2.eligible.length === eligible.length &&
+        r.team2.eligible.every(g => eligible.includes(g))
+      );
+      const matchId = r32match ? r32match.id : null;
+      const assignedGroup = matchId ? annexC[matchId] : null;
+
+      if (assignedGroup) {
+        const grpStandings = standings[assignedGroup] || [];
+        const team = grpStandings[2]; // 3rd place team
+        if (team) {
+          // 3rd place can only be CONFIRMED when ALL groups are done
+          // — only then we know definitively the top-8 third places
+          return {
+            name: team.name,
+            status: allGroupsCompleted ? 'confirmed' : 'projected',
+            flag: getFlagUrl(team.name),
+            pts: team.pts,
+            note: `3° ${t('group_prefix')} ${assignedGroup}`,
+          };
+        }
+      }
+
+      // Not yet determined — show eligible groups
+      const eligibleStr = eligible ? eligible.join('/') : '?';
+      return { name: `3° (${eligibleStr})`, status: 'tbd', flag: '', note: `${t('tab_groups')} ${eligibleStr}` };
+    }
+
+    return { name: '—', status: 'tbd', flag: '' };
+  }
+
+  // ── Helper: fuzzy name match for knockout results ──────────────────────
+  function nameMatches(apiName, resolvedName) {
+    if (!apiName || !resolvedName) return false;
+    const norm = s => s.toLowerCase().replace(/[^a-z]/g, '');
+    const a = norm(apiName), b = norm(resolvedName);
+    return a === b || a.includes(b) || b.includes(a) ||
+           a.startsWith(b.slice(0,5)) || b.startsWith(a.slice(0,5));
+  }
+
   // Determine if ALL R32 matches are finished so we can hide them
   let allR32Done = true;
   for (const m of R32_MATCHES) {
@@ -885,103 +980,7 @@ function renderBracket(groups, allMatches = []) {
   svg.style.cssText = `position:absolute;top:0;left:0;pointer-events:none;z-index:1;overflow:visible;`;
   body.appendChild(svg);
 
-  // Build standings lookup: { 'A': [{team,rank,...}], ... }
-  const standings = {};
-  const thirdPlaceRanked = rankThirdPlace(groups);
-  const top8Thirds = thirdPlaceRanked.slice(0, 8);
-  const qualifyingGroups = top8Thirds.map(t => t.fromGroup);
-  const annexC = resolveAnnexC(qualifyingGroups);
 
-  // ── Build knockout results map from real API data ─────────────────────
-  // Match real fixture scores to R32 match slots by team name fuzzy match.
-  const knockoutResults = {}; // matchId → { score1, score2, status, winner }
-  const koMatches = allMatches.filter(m =>
-    m.status === 'finished' || m.status === 'live'
-  );
-  R32_MATCHES.forEach(slot => {
-    // We'll try to match once we know the two projected teams
-  });
-  // Store for later use after resolveTeam calls
-  const _koMatchData = koMatches;
-
-  // Group all completed = has played all matches
-  const groupsCompleted = {};
-  Object.entries(groups).forEach(([g, grp]) => {
-    const totalExpected = 6; // C(4,2) = 6 matches per group
-    const played = grp.matches.filter(m => m.status === 'finished').length;
-    groupsCompleted[g] = played >= totalExpected;
-    standings[g] = grp.standings || [];
-  });
-
-  // ALL 12 groups must be done before any 3rd-place slot can be "confirmed"
-  // (because top-8 ranking requires knowing every group's 3rd place)
-  const allGroupsCompleted = Object.values(groupsCompleted).length === 12 &&
-                             Object.values(groupsCompleted).every(Boolean);
-
-  // Helper to resolve team info for a slot
-  function resolveTeam(slot) {
-    const { type, group, eligible } = slot;
-    const groupStandings = standings[group] || [];
-
-    if (type === '1st' || type === '2nd') {
-      const idx = type === '1st' ? 0 : 1;
-      const team = groupStandings[idx];
-      if (!team) return { name: `${idx===0?'1º':'2º'} ${t('group_prefix')} ${group}`, status: 'tbd', flag: '' };
-      // A 1st/2nd place is confirmed once their own group finishes
-      const confirmed = groupsCompleted[group] || false;
-      return {
-        name: team.name,
-        status: confirmed ? 'confirmed' : 'projected',
-        flag: getFlagUrl(team.name),
-        pts: team.pts,
-      };
-    }
-
-    if (type === '3rd') {
-      // Find which R32 match this 3rd-place slot belongs to
-      // by matching the eligible groups array
-      const r32match = R32_MATCHES.find(r =>
-        r.team2.type === '3rd' &&
-        r.team2.eligible &&
-        eligible &&
-        r.team2.eligible.length === eligible.length &&
-        r.team2.eligible.every(g => eligible.includes(g))
-      );
-      const matchId = r32match ? r32match.id : null;
-      const assignedGroup = matchId ? annexC[matchId] : null;
-
-      if (assignedGroup) {
-        const grpStandings = standings[assignedGroup] || [];
-        const team = grpStandings[2]; // 3rd place team
-        if (team) {
-          // 3rd place can only be CONFIRMED when ALL groups are done
-          // — only then we know definitively the top-8 third places
-          return {
-            name: team.name,
-            status: allGroupsCompleted ? 'confirmed' : 'projected',
-            flag: getFlagUrl(team.name),
-            pts: team.pts,
-            note: `3° ${t('group_prefix')} ${assignedGroup}`,
-          };
-        }
-      }
-
-      // Not yet determined — show eligible groups
-      const eligibleStr = eligible ? eligible.join('/') : '?';
-      return { name: `3° (${eligibleStr})`, status: 'tbd', flag: '', note: `${t('tab_groups')} ${eligibleStr}` };
-    }
-
-    return { name: '—', status: 'tbd', flag: '' };
-  }
-
-  // ── Helper: fuzzy name match for knockout results ──────────────────────
-  function nameMatches(apiName, resolvedName) {
-    if (!apiName || !resolvedName) return false;
-    const norm = s => s.toLowerCase().replace(/[^a-z]/g, '');
-    const a = norm(apiName), b = norm(resolvedName);
-    return a === b || a.includes(b) || b.includes(a) ||
-           a.startsWith(b.slice(0,5)) || b.startsWith(a.slice(0,5));
-  }
 
   // Render R32 matches
   const r32Results = {}; // track which team "won" for bracket progression

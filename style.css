@@ -1319,7 +1319,7 @@ header, nav, main, .next-bar { position: relative; z-index: 1; }
 }
 
 /* Button in Match Card */
-.ai-btn {
+.ai-btn-mini {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -1333,6 +1333,27 @@ header, nav, main, .next-bar { position: relative; z-index: 1; }
   cursor: pointer;
   transition: var(--tr);
   text-transform: uppercase;
+}
+.ai-btn-mini:hover {
+  background: rgba(139, 92, 246, 0.3);
+  color: #fff;
+  border-color: #8b5cf6;
+}
+
+.ai-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.35rem;
+  background: rgba(139, 92, 246, 0.15);
+  color: #c4b5fd;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--r-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--tr);
 }
 .ai-btn:hover {
   background: rgba(139, 92, 246, 0.3);

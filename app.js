@@ -1177,11 +1177,17 @@ function createMatchCard({ id, label, date, t1, t2, overallStatus }, extraClass 
     const aiKeyRev = `${t2.name}|${t1.name}`;
     if (_aiData[aiKey] || _aiData[aiKeyRev]) {
       const btn = document.createElement('button');
-      btn.className = 'ai-btn';
-      btn.innerHTML = '🧠 Análisis IA';
+      btn.className = 'ai-btn-mini';
+      btn.innerHTML = '🧠 IA';
+      btn.title = 'Ver Análisis IA';
       // In bracket cards, we directly pass data. For keys that might be reversed, openAiModalByKey handles swapping.
-      btn.onclick = () => openAiModalByKey(t1.name, t2.name);
-      card.appendChild(btn);
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        openAiModalByKey(t1.name, t2.name);
+      };
+      const hdr = card.querySelector('.mc-hdr');
+      const dateEl = hdr.querySelector('.mc-date');
+      hdr.insertBefore(btn, dateEl);
     }
   }
 

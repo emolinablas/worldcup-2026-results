@@ -813,6 +813,11 @@ function renderBracket(groups, allMatches = []) {
   // Store for later use after resolveTeam calls
   const _koMatchData = koMatches;
 
+  // ── R32 fixture list from openfootball (all statuses, only real Round of 32 matches)
+  // Used to override annexC 3rd-place projections with the real FIFA-confirmed opponents.
+  // openfootball sets round='Round of 32' for knockout matches; group stage = has a group letter.
+  const _r32Fixtures = allMatches.filter(m => !m.group && m.round === 'Round of 32');
+
   // Group all completed = has played all matches
   const groupsCompleted = {};
   Object.entries(groups).forEach(([g, grp]) => {
@@ -989,8 +994,22 @@ function renderBracket(groups, allMatches = []) {
     const yC = m.slotY * BS_H + BS_H / 2;
     const yT = yC - BC_H / 2;
 
-    const t1 = resolveTeam(m.team1);
-    const t2 = resolveTeam(m.team2);
+    let t1 = resolveTeam(m.team1);
+    let t2 = resolveTeam(m.team2);
+
+    // ── Override t2 with real R32 fixture data from openfootball ──────────
+    // Only _r32Fixtures (round='Round of 32', no group) are used — safe from group-stage contamination.
+    if (t1.name && t1.name !== '—') {
+      const fixture = _r32Fixtures.find(k =>
+        nameMatches(k.team1, t1.name) || nameMatches(k.team2, t1.name)
+      );
+      if (fixture) {
+        const apiOpponent = nameMatches(fixture.team1, t1.name) ? fixture.team2 : fixture.team1;
+        if (apiOpponent && apiOpponent.length > 1 && !nameMatches(apiOpponent, t2.name)) {
+          t2 = { name: apiOpponent, status: 'confirmed', flag: getFlagUrl(apiOpponent) };
+        }
+      }
+    }
 
     // Try to find a real played result for this slot
     let realScore1 = null, realScore2 = null, realPen1 = null, realPen2 = null, realStatus = null;

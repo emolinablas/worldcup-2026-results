@@ -249,38 +249,38 @@ let COL_X = {
 const R32_MATCHES = [
   // ── LEFT SIDE (top → bottom) ───────────────────────────────────────────
   // M74 (East Rutherford, Jun 30): Winner E vs 3rd A/B/C/D/F → GER vs PAR
-  { id: 'M74', col: 'R32L', slotY: 0, team1: { type: '1st', group: 'E' }, team2: { type: '3rd', eligible: ['A','B','C','D','F'] } },
-  // M77 (Houston, Jun 29):  Winner I vs 3rd C/D/F/G/H → FRA vs SWE
-  { id: 'M77', col: 'R32L', slotY: 1, team1: { type: '1st', group: 'I' }, team2: { type: '3rd', eligible: ['C','D','F','G','H'] } },
+  { id: 'M74', col: 'R32L', slotY: 0, team1: { type: '1st', group: 'E' }, team2: { type: '3rd', eligible: ['A','B','C','D','F'] }, fixture: { t1: 'Germany', t2: 'Paraguay' } },
+  // M77 (Houston, Jun 30): Winner I vs 3rd C/D/F/G/H → FRA vs SWE
+  { id: 'M77', col: 'R32L', slotY: 1, team1: { type: '1st', group: 'I' }, team2: { type: '3rd', eligible: ['C','D','F','G','H'] }, fixture: { t1: 'France', t2: 'Sweden' } },
   // M73 (Inglewood, Jun 28): Ru-A vs Ru-B → RSA vs CAN
-  { id: 'M73', col: 'R32L', slotY: 2, team1: { type: '2nd', group: 'A' }, team2: { type: '2nd', group: 'B' } },
+  { id: 'M73', col: 'R32L', slotY: 2, team1: { type: '2nd', group: 'A' }, team2: { type: '2nd', group: 'B' }, fixture: { t1: 'South Africa', t2: 'Canada' } },
   // M75 (Guadalupe, Jun 29): Winner F vs Ru-C → NED vs MAR
-  { id: 'M75', col: 'R32L', slotY: 3, team1: { type: '1st', group: 'F' }, team2: { type: '2nd', group: 'C' } },
-  // M83 (Toronto, Jul 2): Ru-K vs Ru-L
-  { id: 'M83', col: 'R32L', slotY: 4, team1: { type: '2nd', group: 'K' }, team2: { type: '2nd', group: 'L' } },
-  // M84 (Inglewood, Jul 2): Winner H vs Ru-J → ESP vs Ru-J
-  { id: 'M84', col: 'R32L', slotY: 5, team1: { type: '1st', group: 'H' }, team2: { type: '2nd', group: 'J' } },
+  { id: 'M75', col: 'R32L', slotY: 3, team1: { type: '1st', group: 'F' }, team2: { type: '2nd', group: 'C' }, fixture: { t1: 'Netherlands', t2: 'Morocco' } },
+  // M83 (Toronto, Jul 2): Ru-K vs Ru-L → POR vs CRO
+  { id: 'M83', col: 'R32L', slotY: 4, team1: { type: '2nd', group: 'K' }, team2: { type: '2nd', group: 'L' }, fixture: { t1: 'Portugal', t2: 'Croatia' } },
+  // M84 (Inglewood, Jul 2): Winner H vs Ru-J → ESP vs AUT
+  { id: 'M84', col: 'R32L', slotY: 5, team1: { type: '1st', group: 'H' }, team2: { type: '2nd', group: 'J' }, fixture: { t1: 'Spain', t2: 'Austria' } },
   // M81 (Santa Clara, Jul 1): Winner D vs 3rd B/E/F/I/J → USA vs BIH
-  { id: 'M81', col: 'R32L', slotY: 6, team1: { type: '1st', group: 'D' }, team2: { type: '3rd', eligible: ['B','E','F','I','J'] } },
-  // M82 (Seattle, Jul 1): Winner G vs 3rd A/E/H/I/J → BEL vs KOR
-  { id: 'M82', col: 'R32L', slotY: 7, team1: { type: '1st', group: 'G' }, team2: { type: '3rd', eligible: ['A','E','H','I','J'] } },
+  { id: 'M81', col: 'R32L', slotY: 6, team1: { type: '1st', group: 'D' }, team2: { type: '3rd', eligible: ['B','E','F','I','J'] }, fixture: { t1: 'USA', t2: 'Bosnia & Herzegovina' } },
+  // M82 (Seattle, Jul 1): Winner G vs 3rd A/E/H/I/J → BEL vs SEN
+  { id: 'M82', col: 'R32L', slotY: 7, team1: { type: '1st', group: 'G' }, team2: { type: '3rd', eligible: ['A','E','H','I','J'] }, fixture: { t1: 'Belgium', t2: 'Senegal' } },
   // ── RIGHT SIDE (top → bottom) ───────────────────────────────────────────
   // M76 (Houston, Jun 29): Winner C vs Ru-F → BRA vs JPN
-  { id: 'M76', col: 'R32R', slotY: 0, team1: { type: '1st', group: 'C' }, team2: { type: '2nd', group: 'F' } },
+  { id: 'M76', col: 'R32R', slotY: 0, team1: { type: '1st', group: 'C' }, team2: { type: '2nd', group: 'F' }, fixture: { t1: 'Brazil', t2: 'Japan' } },
   // M78 (Arlington, Jun 30): Ru-E vs Ru-I → CIV vs NOR
-  { id: 'M78', col: 'R32R', slotY: 1, team1: { type: '2nd', group: 'E' }, team2: { type: '2nd', group: 'I' } },
+  { id: 'M78', col: 'R32R', slotY: 1, team1: { type: '2nd', group: 'E' }, team2: { type: '2nd', group: 'I' }, fixture: { t1: 'Ivory Coast', t2: 'Norway' } },
   // M79 (Mexico City, Jun 30): Winner A vs 3rd C/E/F/H/I → MEX vs ECU
-  { id: 'M79', col: 'R32R', slotY: 2, team1: { type: '1st', group: 'A' }, team2: { type: '3rd', eligible: ['C','E','F','H','I'] } },
-  // M80 (Atlanta, Jul 1): Winner L vs 3rd E/H/I/J/K → Wn-L vs 3rd
-  { id: 'M80', col: 'R32R', slotY: 3, team1: { type: '1st', group: 'L' }, team2: { type: '3rd', eligible: ['E','H','I','J','K'] } },
+  { id: 'M79', col: 'R32R', slotY: 2, team1: { type: '1st', group: 'A' }, team2: { type: '3rd', eligible: ['C','E','F','H','I'] }, fixture: { t1: 'Mexico', t2: 'Ecuador' } },
+  // M80 (Atlanta, Jul 1): Winner L vs 3rd E/H/I/J/K → ENG vs DR Congo
+  { id: 'M80', col: 'R32R', slotY: 3, team1: { type: '1st', group: 'L' }, team2: { type: '3rd', eligible: ['E','H','I','J','K'] }, fixture: { t1: 'England', t2: 'DR Congo' } },
   // M86 (Miami, Jul 3): Winner J vs Ru-H → ARG vs CPV
-  { id: 'M86', col: 'R32R', slotY: 4, team1: { type: '1st', group: 'J' }, team2: { type: '2nd', group: 'H' } },
+  { id: 'M86', col: 'R32R', slotY: 4, team1: { type: '1st', group: 'J' }, team2: { type: '2nd', group: 'H' }, fixture: { t1: 'Argentina', t2: 'Cape Verde' } },
   // M88 (Arlington, Jul 3): Ru-D vs Ru-G → AUS vs EGY
-  { id: 'M88', col: 'R32R', slotY: 5, team1: { type: '2nd', group: 'D' }, team2: { type: '2nd', group: 'G' } },
-  // M85 (Vancouver, Jul 2): Winner B vs 3rd E/F/G/I/J → SUI vs IRN
-  { id: 'M85', col: 'R32R', slotY: 6, team1: { type: '1st', group: 'B' }, team2: { type: '3rd', eligible: ['E','F','G','I','J'] } },
-  // M87 (Kansas City, Jul 3): Winner K vs 3rd D/E/I/J/L → Wn-K vs 3rd
-  { id: 'M87', col: 'R32R', slotY: 7, team1: { type: '1st', group: 'K' }, team2: { type: '3rd', eligible: ['D','E','I','J','L'] } },
+  { id: 'M88', col: 'R32R', slotY: 5, team1: { type: '2nd', group: 'D' }, team2: { type: '2nd', group: 'G' }, fixture: { t1: 'Australia', t2: 'Egypt' } },
+  // M85 (Vancouver, Jul 2): Winner B vs 3rd E/F/G/I/J → SUI vs ALG
+  { id: 'M85', col: 'R32R', slotY: 6, team1: { type: '1st', group: 'B' }, team2: { type: '3rd', eligible: ['E','F','G','I','J'] }, fixture: { t1: 'Switzerland', t2: 'Algeria' } },
+  // M87 (Kansas City, Jul 3): Winner K vs 3rd D/E/I/J/L → COL vs GHA
+  { id: 'M87', col: 'R32R', slotY: 7, team1: { type: '1st', group: 'K' }, team2: { type: '3rd', eligible: ['D','E','I','J','L'] }, fixture: { t1: 'Colombia', t2: 'Ghana' } },
 ];
 
 /** Bracket tree: which R32 pairs feed into R16, then QF, SF, Final */
@@ -997,23 +997,14 @@ function renderBracket(groups, allMatches = []) {
     let t1 = resolveTeam(m.team1);
     let t2 = resolveTeam(m.team2);
 
-    // ── Override teams with confirmed R32 fixture data from openfootball ──────
-    // _r32Fixtures = only matches with round='Round of 32' and no group field.
-    // We search by t1 name only (the 1st/2nd place team is the reliable anchor).
-    // This corrects cases where annexC gives wrong 3rd-place projections.
-    if (t1.name && t1.name !== '—') {
-      const fixture = _r32Fixtures.find(k =>
-        nameMatches(k.team1, t1.name) || nameMatches(k.team2, t1.name)
-      );
-      if (fixture) {
-        const t1IsHome = nameMatches(fixture.team1, t1.name);
-        const apiT1 = t1IsHome ? fixture.team1 : fixture.team2;
-        const apiT2 = t1IsHome ? fixture.team2 : fixture.team1;
-        if (apiT1 && !nameMatches(apiT1, t1.name))
-          t1 = { name: apiT1, status: 'confirmed', flag: getFlagUrl(apiT1) };
-        if (apiT2 && !nameMatches(apiT2, t2.name))
-          t2 = { name: apiT2, status: 'confirmed', flag: getFlagUrl(apiT2) };
-      }
+    // ── Apply confirmed fixture teams (hardcoded from FIFA official schedule) ──
+    // m.fixture contains the real, permanent participants for this R32 slot.
+    // This is the single source of truth and overrides any annexC/standings projection.
+    if (m.fixture) {
+      if (!nameMatches(t1.name, m.fixture.t1))
+        t1 = { name: m.fixture.t1, status: 'confirmed', flag: getFlagUrl(m.fixture.t1) };
+      if (!nameMatches(t2.name, m.fixture.t2))
+        t2 = { name: m.fixture.t2, status: 'confirmed', flag: getFlagUrl(m.fixture.t2) };
     }
 
     // Try to find a real played result for this slot

@@ -989,8 +989,30 @@ function renderBracket(groups, allMatches = []) {
     const yC = m.slotY * BS_H + BS_H / 2;
     const yT = yC - BC_H / 2;
 
-    const t1 = resolveTeam(m.team1);
-    const t2 = resolveTeam(m.team2);
+    let t1 = resolveTeam(m.team1);
+    let t2 = resolveTeam(m.team2);
+
+    // ── API Override: if openfootball already published the real fixture teams ──
+    // This prevents annexC projection from overriding the true opponent.
+    // e.g. France vs Sweden is confirmed by API even if annexC picks Paraguay.
+    const apiFixture = _koMatchData.find(k => {
+      // k is a scheduled/upcoming OR finished/live match
+      // Match if one of the API teams fuzzy-matches t1 (the 1st/2nd place team we know)
+      return (nameMatches(k.team1, t1.name) || nameMatches(k.team2, t1.name));
+    });
+    if (apiFixture && t1.name && t1.name !== '—' && t1.name !== '') {
+      // Determine which side of the fixture is t1
+      const t1IsHome = nameMatches(apiFixture.team1, t1.name);
+      const apiOpponent = t1IsHome ? apiFixture.team2 : apiFixture.team1;
+      // Only override t2 if the API opponent is a real team name (not empty)
+      if (apiOpponent && apiOpponent.length > 1 && !nameMatches(apiOpponent, t2.name)) {
+        t2 = {
+          name: apiOpponent,
+          status: 'confirmed',
+          flag: getFlagUrl(apiOpponent),
+        };
+      }
+    }
 
     // Try to find a real played result for this slot
     let realScore1 = null, realScore2 = null, realPen1 = null, realPen2 = null, realStatus = null;

@@ -989,26 +989,8 @@ function renderBracket(groups, allMatches = []) {
     const yC = m.slotY * BS_H + BS_H / 2;
     const yT = yC - BC_H / 2;
 
-    let t1 = resolveTeam(m.team1);
-    let t2 = resolveTeam(m.team2);
-
-    // ── API Override: use real knockout fixture teams if the API already has them ──
-    // Only look at matches WITHOUT a group (i.e., Round of 32 / knockout stage)
-    const apiFixture = _koMatchData.find(k => {
-      if (k.group) return false; // Skip group stage matches
-      return (nameMatches(k.team1, t1.name) || nameMatches(k.team2, t1.name));
-    });
-    if (apiFixture && t1.name && t1.name !== '—' && t1.name !== '') {
-      const t1IsHome = nameMatches(apiFixture.team1, t1.name);
-      const apiOpponent = t1IsHome ? apiFixture.team2 : apiFixture.team1;
-      if (apiOpponent && apiOpponent.length > 1 && !nameMatches(apiOpponent, t2.name)) {
-        t2 = {
-          name: apiOpponent,
-          status: 'confirmed',
-          flag: getFlagUrl(apiOpponent),
-        };
-      }
-    }
+    const t1 = resolveTeam(m.team1);
+    const t2 = resolveTeam(m.team2);
 
     // Try to find a real played result for this slot
     let realScore1 = null, realScore2 = null, realPen1 = null, realPen2 = null, realStatus = null;

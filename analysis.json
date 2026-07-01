@@ -388,5 +388,19 @@
       "t2_weakness": "The team often struggles to generate creative football when the opponent concedes possession and sits deep. They rely too heavily on set-pieces to break deadlocks in tight matches.",
       "source": "Tactical analysis powered by Gemini AI based on World Cup 2026 group stage performance"
     }
+  },
+  "England|DR Congo": {
+    "stats": {
+      "possession": [68, 32],
+      "passing": [89, 74],
+      "shots": [16, 7]
+    },
+    "ai_analysis": {
+      "t1_strength": "Inglaterra destaca por su capacidad para monopolizar el balón en el centro del campo mediante constantes triángulos de posesión. La movilidad de sus mediapuntas les permite generar superioridades numéricas letales en el último tercio del campo. Además, su estructura de presión tras pérdida es asfixiante y permite recuperar la posesión en campo contrario.",
+      "t1_weakness": "El equipo inglés sufre frecuentemente cuando se enfrenta a bloques bajos muy cerrados, mostrando episodios de falta de creatividad para romper líneas defensivas estáticas. También tienden a dejar grandes espacios a la espalda de sus laterales cuando estos se incorporan en exceso al ataque. Esto los hace particularmente vulnerables a transiciones ofensivas veloces y envíos largos cruzados.",
+      "t2_strength": "La República Democrática del Congo basa su juego en una solidez defensiva estructural tremenda y un despliegue físico incombustible en la medular. Son especialistas en absorber presión para luego lanzar transiciones verticales en cuestión de segundos utilizando la explosividad de sus extremos. Su poderío atlético y aéreo en las jugadas a balón parado representa una amenaza constante y difícil de defender.",
+      "t2_weakness": "El combinado africano sufre enormemente cuando se ve obligado a llevar la iniciativa del partido y construir jugadas hilvanadas desde su propia área. La precisión de sus pases bajo alta presión es inconsistente, lo que a menudo provoca pérdidas peligrosas en zonas críticas del campo. Además, su repliegue sin balón puede llegar a ser demasiado hundido, aislando completamente a su delantero centro de cualquier apoyo.",
+      "prediction": "Inglaterra 2-0 DR Congo. El dominio absoluto del mediocampo por parte de Inglaterra terminará agotando la resistencia del bloque defensivo congoleño tras la primera mitad del encuentro. La paciencia en la circulación del balón será clave para abrir el cerrojo africano, neutralizando cualquier intento de contragolpe mediante un posicionamiento preventivo impecable."
+    }
   }
 }

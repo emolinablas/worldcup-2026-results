@@ -416,5 +416,19 @@
       "t2_weakness": "A menudo carecen de la creatividad y la pausa necesarias en la zona central para desarmar bloques bajos o mantener secuencias prolongadas de posesión. Cuando el rival les cede deliberadamente la iniciativa, tienden a cometer errores no forzados en la circulación del balón. Su excesiva dependencia de los balones largos y el juego directo puede hacer que su ofensiva se vuelva predecible y fácil de anticipar.",
       "prediction": "Bélgica 2-1 Senegal. Bélgica impondrá sus condiciones desde la posesión y encontrará los espacios a través de la paciencia y el talento individual en la frontal del área. Senegal logrará castigar al menos una vez explotando la lentitud del repliegue belga mediante un contragolpe fulminante, pero la calidad técnica europea terminará por decantar la balanza."
     }
+  },
+  "USA|Bosnia & Herzegovina": {
+    "stats": {
+      "possession": [58, 42],
+      "passing": [85, 78],
+      "shots": [14, 9]
+    },
+    "ai_analysis": {
+      "t1_strength": "Estados Unidos destaca por sus transiciones veloces y la capacidad de sobrecargar los pasillos laterales mediante laterales profundamente ofensivos. La constante movilidad de su tridente de ataque permite arrastrar marcas rivales, generando huecos en la frontal del área para la llegada de los mediocampistas.",
+      "t1_weakness": "La principal vulnerabilidad del conjunto norteamericano radica en la defensa del juego directo y las jugadas a balón parado. A menudo, el bloque pierde cohesión al ejecutar una presión alta desincronizada, dejando un espacio crítico a espaldas de los pivotes que expone a los defensores centrales.",
+      "t2_strength": "Bosnia y Herzegovina exhibe una notable solidez estableciendo un bloque bajo muy compacto que niega sistemáticamente los carriles interiores. Su superioridad física les permite dominar los duelos aéreos en ambas áreas, siendo letales en las acciones de estrategia y en el lanzamiento de contraataques verticales.",
+      "t2_weakness": "El equipo balcánico sufre de manera considerable cuando el rival le cede la iniciativa y se ve obligado a construir juego elaborado desde su propia mitad. Asimismo, sus defensores laterales carecen de la agilidad necesaria para defender situaciones de uno contra uno frente a extremos rápidos a campo abierto.",
+      "prediction": "Victoria de Estados Unidos por 2-1. El alto ritmo y el desequilibrio estadounidense por las bandas lograrán agrietar el bloque bajo bosnio en la segunda mitad, aunque los europeos probablemente descontarán aprovechando su contundencia en alguna acción a balón parado."
+    }
   }
 }

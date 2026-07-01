@@ -402,5 +402,19 @@
       "t2_weakness": "El combinado africano sufre enormemente cuando se ve obligado a llevar la iniciativa del partido y construir jugadas hilvanadas desde su propia área. La precisión de sus pases bajo alta presión es inconsistente, lo que a menudo provoca pérdidas peligrosas en zonas críticas del campo. Además, su repliegue sin balón puede llegar a ser demasiado hundido, aislando completamente a su delantero centro de cualquier apoyo.",
       "prediction": "Inglaterra 2-0 DR Congo. El dominio absoluto del mediocampo por parte de Inglaterra terminará agotando la resistencia del bloque defensivo congoleño tras la primera mitad del encuentro. La paciencia en la circulación del balón será clave para abrir el cerrojo africano, neutralizando cualquier intento de contragolpe mediante un posicionamiento preventivo impecable."
     }
+  },
+  "Belgium|Senegal": {
+    "stats": {
+      "possession": [58, 42],
+      "passing": [87, 81],
+      "shots": [14, 11]
+    },
+    "ai_analysis": {
+      "t1_strength": "La capacidad de Bélgica para controlar el ritmo del partido a través de su mediocampo sigue siendo su principal activo táctico. Su sala de máquinas orquesta las transiciones ofensivas con pases filtrados de alta precisión y visión periférica. Además, su constante juego de asociación por las bandas genera frecuentes situaciones de superioridad numérica en el último tercio del campo.",
+      "t1_weakness": "La línea defensiva belga ha mostrado severas vulnerabilidades ante equipos veloces que atacan los amplios espacios a la espalda de los centrales. Las transiciones defensivas suelen ser lentas y descoordinadas, dejando muchas veces expuestos a sus mediocampistas de contención. Esta evidente falta de velocidad en el retroceso es su mayor debilidad ante contragolpes directos y verticales.",
+      "t2_strength": "Senegal destaca por su excepcional condición atlética y por mantener un bloque defensivo extremadamente físico, ordenado y difícil de penetrar. Su principal arma ofensiva es la rápida transición de defensa a ataque, aprovechando al máximo la explosividad de sus extremos en campo abierto. Adicionalmente, el juego aéreo en acciones a balón parado representa una amenaza constante gracias a la envergadura de sus atacantes y centrales.",
+      "t2_weakness": "A menudo carecen de la creatividad y la pausa necesarias en la zona central para desarmar bloques bajos o mantener secuencias prolongadas de posesión. Cuando el rival les cede deliberadamente la iniciativa, tienden a cometer errores no forzados en la circulación del balón. Su excesiva dependencia de los balones largos y el juego directo puede hacer que su ofensiva se vuelva predecible y fácil de anticipar.",
+      "prediction": "Bélgica 2-1 Senegal. Bélgica impondrá sus condiciones desde la posesión y encontrará los espacios a través de la paciencia y el talento individual en la frontal del área. Senegal logrará castigar al menos una vez explotando la lentitud del repliegue belga mediante un contragolpe fulminante, pero la calidad técnica europea terminará por decantar la balanza."
+    }
   }
 }
